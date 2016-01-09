@@ -4,4 +4,4 @@ SQLServer
 .DS_Store
 .librarian
 .tmp
-vagrant/files
+vagrant/packages
