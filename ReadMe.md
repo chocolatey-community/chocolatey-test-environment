@@ -8,7 +8,7 @@ A vagrant setup similar to the package-verifier for manually testing packages.
 To get started, ensure you have the following installed:
  * Vagrant 1.8.1+
  * Virtualbox 4.3.28+
- * vagrant-shara plugin
+ * vagrant-shara plugin (`vagrant plugin install sahara`).
  
 You can also install those two on Windows by running `choco install packages.config`
 
