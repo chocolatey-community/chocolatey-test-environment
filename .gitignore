@@ -1,0 +1,6 @@
+.vagrant
+dotNetFx40.exe
+SQLServer
+.DS_Store
+.librarian
+.tmp
