@@ -1,0 +1,39 @@
+﻿Vagrant.configure("2") do |config|
+  config.vm.box = "ferventcoder/win2012r2-x64-nocm"
+
+  config.vm.provider :virtualbox do |v, override|
+    # show the GUI
+    v.gui = true
+    v.customize ["modifyvm", :id, "--memory", "4096"]
+    v.customize ["modifyvm", :id, "--cpus", "2"]
+    v.customize ["modifyvm", :id, "--vram", 32]
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    v.customize ["modifyvm", :id, "--audio", "none"]
+    v.customize ["modifyvm", :id, "--clipboard", "disabled"]
+    v.customize ["modifyvm", :id, "--usb", "off"]
+    v.linked_clone = true if Vagrant::VERSION >= '1.8.0'
+  end
+
+  config.windows.halt_timeout = 20
+  config.winrm.username = "vagrant"
+  config.winrm.password = "vagrant"
+  config.vm.guest = :windows
+
+  if Vagrant::VERSION >= '1.6.0'
+    config.vm.communicator = "winrm"
+  end
+
+  config.vm.synced_folder "files", "/ProgramData/chocolatey/.chocolatey"
+
+  # Port forward WinRM / RDP
+  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true
+  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+  # Port forward SSH (ssh is forwarded by default in most versions of Vagrant, but be sure)
+  #  It's not necessary if you are not using SSH, but it doesn't hurt anything to have it
+  config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+  config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
+  config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
+  config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
+  #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION"
+end
