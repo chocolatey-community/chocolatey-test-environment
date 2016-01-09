@@ -23,8 +23,12 @@
     config.vm.communicator = "winrm"
   end
 
-  config.vm.synced_folder "files", "/ProgramData/chocolatey/.chocolatey"
 
+  config.vm.synced_folder "packages", "/packages"
+  #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
+  # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
+  #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
+  
   # Port forward WinRM / RDP
   config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true
   config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
@@ -36,4 +40,5 @@
   config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
   config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
   #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION"
+  #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --source 'c:\packages;http://chocolatey.org/api/v2/'"
 end
