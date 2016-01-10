@@ -2,7 +2,7 @@
 
 A vagrant setup similar to the package-verifier for manually testing packages.
 
-## Requirements
+## Requirements
 
 You need a computer with:
 
@@ -51,7 +51,8 @@ When you are ready to reset to the state just before installing:
 
  * If you are finished with the vagrant box, you can remove your temporary copy with `vagrant destroy`.
 
-### Differences Between This and Verifier Service
+## Differences Between This and Verifier Service
+
 There are a couple of difference between the verifier service and this environment.
 
  * The verifier is run without the GUI - meaning it is run in a headless state. There is no box to interact with.
@@ -63,3 +64,7 @@ There are a couple of difference between the verifier service and this environme
     * 4 CPUs - `v.customize ["modifyvm", :id, "--cpus", "4"]`
     * Clipboard disabled - `v.customize ["modifyvm", :id, "--clipboard", "disabled"]`
     * Drag and Drop disabled - `v.customize ["modifyvm", :id, "--draganddrop", "disabled"]`
+
+## Troubleshooting
+
+You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please cd into the vagrant subdirectory of this repo and try again.
