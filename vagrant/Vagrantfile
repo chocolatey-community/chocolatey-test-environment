@@ -78,7 +78,8 @@ Vagrant.configure("2") do |config|
   # Provisioners - http://docs.vagrantup.com/v2/provisioning/
   # In this specific vagrant usage, we are using the shell provisioner
   # http://docs.vagrantup.com/v2/provisioning/shell.html
-  config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :keep_color => true, :powershell_elevated_interactive => true
+  config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
+  config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
   config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
   config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
   #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION", :keep_color => true, :powershell_elevated_interactive => true
