@@ -92,7 +92,7 @@ Write-Output "Testing package if a line is uncommented. Otherwise you will see a
 # - uncomment one of the two and edit it appropriately
 # - See the README for details
 #choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION
-#choco.exe install -fdvy INSERT_NAME --source 'c:\\packages;http://chocolatey.org/api/v2/'"
+#choco.exe install -fdvy INSERT_NAME --source "'c:\\packages;http://chocolatey.org/api/v2/'"
 
 # vagrant has issues knowing that there was an error
 if ($LASTEXITCODE -ne 0) {

@@ -1,20 +1,20 @@
-# Package Verifier Vagrant
+# Chocolatey Testing Environment
 
-A vagrant setup similar to the package-verifier for manually testing packages.
+A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages.
 
 ## Requirements
 
 You need a computer with:
 
 * a 64-bit processor and OS
-* Intel VT-x [enabled](http://www.howtogeek.com/213795/how-to-enable-intel-vt-x-in-your-computers-bios-or-uefi-firmware/) (usually not an issue if your computer is newer than 2011).
+* Intel VT-x [enabled](http://www.howtogeek.com/213795/how-to-enable-intel-vt-x-in-your-computers-bios-or-uefi-firmware/) (usually not an issue if your computer is newer than 2011). This is necessary because we are using 64bit VMs.
 * Hyper-V may need to be disabled for Virtualbox to work properly if your computer is a Windows box.
 * At least 10GB of free space.
 
 ## Setup
 
 To get started, ensure you have the following installed:
- * Vagrant 1.8.1+
+ * Vagrant 1.8.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 1.8.x.
  * Virtualbox 4.3.28+ (5.x may have issues, so try to stay in 4.3.x series)
  * vagrant sahara plugin (`vagrant plugin install sahara`)
 
@@ -27,8 +27,9 @@ You can also install Vagrant/Virtualbox on Windows by running `choco install pac
 ### Preparing the Testing Environment
 
  * Ensure setup above is good on your machine.
- * Open a command line and navigate to the `vagrant` subdirectory of this repository.
- * Run `vagrant up` to prepare the machine for testing. Note that it will take quite awhile the first time you need to download the [box from Atlas](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm). Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the Vagrantfile.
+ * Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to this directory of the repository. You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
+   * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
+ * Run `vagrant up` to prepare the machine for testing. Note that it will take quite awhile the first time you need to download the [box from Atlas](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm). Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.
  * Now the box is ready for you to start testing against. Run `vagrant sandbox on`.
 
 ### Testing a Package
@@ -51,13 +52,14 @@ When you are ready to reset to the state just before installing:
 
  * If you are finished with the vagrant box, you can remove your temporary copy with `vagrant destroy`.
 
-## Differences Between This and Verifier Service
+## Differences Between This and Package Verifier Service
 
-There are a couple of difference between the verifier service and this environment.
+There are a couple of difference between the [verifier service]() and this environment.
 
  * The verifier is run without the GUI - meaning it is run in a headless state. There is no box to interact with.
+ * The verifier only runs against Windows 2012 R2 currently. This repo is adding more boxes as they become available.
  * The verifier times out on waiting for a command after 12 minutes.
- * Synced folders are different - it syncs the .chocolatey folder to gather the package information files.
+ * Synced folders are different - the verifier syncs the .chocolatey folder to gather the package information files.
  * Specific VM settings are different (for performance):
     * No GUI (as previously mentioned) - `v.gui = false`
     * 6GB RAM - `v.customize ["modifyvm", :id, "--memory", "6144"]`
@@ -65,6 +67,6 @@ There are a couple of difference between the verifier service and this environme
     * Clipboard disabled - `v.customize ["modifyvm", :id, "--clipboard", "disabled"]`
     * Drag and Drop disabled - `v.customize ["modifyvm", :id, "--draganddrop", "disabled"]`
 
-## Troubleshooting
+## Troubleshooting
 
-You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please cd into the vagrant subdirectory of this repo and try again.
+You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
