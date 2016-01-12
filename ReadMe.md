@@ -1,6 +1,6 @@
 # Chocolatey Testing Environment
 
-A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages.
+A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages. Over time this will add more Windows platforms for testing.
 
 ## Requirements
 
