@@ -9,4 +9,3 @@ if (!(Test-Path $ChocoInstallPath)) {
 
 choco feature enable -n autouninstaller
 choco feature enable -n allowGlobalConfirmation
-choco feature disable -n powershellhost

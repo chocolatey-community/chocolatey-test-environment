@@ -82,6 +82,23 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
   config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
   config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
-  #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION", :keep_color => true, :powershell_elevated_interactive => true
-  #config.vm.provision :shell, :inline => "choco.exe install -fdvy INSERT_NAME --source 'c:\packages;http://chocolatey.org/api/v2/'", :keep_color => true, :powershell_elevated_interactive => true
+
+$packageTestScript = <<SCRIPT
+$ErrorActionPreference = "Stop"
+$env:PATH +=";$env:SystemDrive\\ProgramData\\chocolatey\\bin"
+
+Write-Output "Testing package if a line is uncommented. Otherwise you will see an error."
+# THIS IS WHAT YOU CHANGE
+# - uncomment one of the two and edit it appropriately
+# - See the README for details
+#choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION
+#choco.exe install -fdvy INSERT_NAME --source 'c:\\packages;http://chocolatey.org/api/v2/'"
+
+# vagrant has issues knowing that there was an error
+if ($LASTEXITCODE -ne 0) {
+  exit 1
+}
+SCRIPT
+
+  config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
 end
