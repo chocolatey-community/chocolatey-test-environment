@@ -2,6 +2,10 @@
 
 A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages. Over time this will add more Windows platforms for testing.
 
+When creating packages or testing other parts of Chocolatey, this environment provides a good base for an independent testing minus any dependencies you may already have installed. It also allows you to completely destroy an environment and then just tear it down without worry about messing up something on your own system.
+
+When creating packages, please review https://github.com/chocolatey/choco/wiki/CreatePackages
+
 ## Requirements
 
 You need a computer with:
