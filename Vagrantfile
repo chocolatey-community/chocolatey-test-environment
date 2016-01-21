@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
   if Vagrant::VERSION < '1.8.0'
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1"
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
   else
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
