@@ -78,10 +78,18 @@ Vagrant.configure("2") do |config|
   # Provisioners - http://docs.vagrantup.com/v2/provisioning/
   # In this specific vagrant usage, we are using the shell provisioner
   # http://docs.vagrantup.com/v2/provisioning/shell.html
-  config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
-  config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-  config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
-  config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
+  if Vagrant::VERSION < '1.8.0'
+    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1"
+    config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true
+    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
+  else
+    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
+  end
+  
 
 $packageTestScript = <<SCRIPT
 $ErrorActionPreference = "Stop"
@@ -100,5 +108,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 SCRIPT
 
-  config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
+  if Vagrant::VERSION < '1.8.0'
+    config.vm.provision :shell, :inline => $packageTestScript
+  else
+    config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
+  end
+  
 end
