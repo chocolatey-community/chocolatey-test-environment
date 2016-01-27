@@ -89,7 +89,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
   end
-  
+
 
 $packageTestScript = <<SCRIPT
 $ErrorActionPreference = "Stop"
@@ -99,8 +99,8 @@ Write-Output "Testing package if a line is uncommented. Otherwise you will see a
 # THIS IS WHAT YOU CHANGE
 # - uncomment one of the two and edit it appropriately
 # - See the README for details
-#choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION
-#choco.exe install -fdvy INSERT_NAME --source "'c:\\packages;http://chocolatey.org/api/v2/'"
+#choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION  --allow-downgrade
+#choco.exe install -fdvy INSERT_NAME  --allow-downgrade --source "'c:\\packages;http://chocolatey.org/api/v2/'"
 
 # vagrant has issues knowing that there was an error
 if ($LASTEXITCODE -ne 0) {
@@ -113,5 +113,5 @@ SCRIPT
   else
     config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
   end
-  
+
 end
