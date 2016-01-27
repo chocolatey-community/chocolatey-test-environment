@@ -31,16 +31,19 @@ You can also install Vagrant/Virtualbox on Windows by running `choco install pac
 ### Preparing the Testing Environment
 
  * Ensure setup above is good on your machine.
- * Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to this directory of the repository. You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
+ * Fork and Clone this repository
+ * Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
    * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
- * Run `vagrant up` to prepare the machine for testing. Note that it will take quite awhile the first time you need to download the [box from Atlas](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm). Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.
- * Now the box is ready for you to start testing against. Run `vagrant sandbox on`.
+ * Run `vagrant up` to prepare the machine for testing. 
+   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
+ * Now the box is ready for you to start testing against. 
+ * Run the following command: `vagrant sandbox on`.  This takes a snapshot of the VM using the [vagrant plugin](https://github.com/jedi4ever/sahara) that was installed earlier. This means that after testing packages, the VM can be returned to this known "good" state.
 
 ### Testing a Package
 
-For testing a package, you have two avenues. For a locally built package, you can drop the package into the `vagrant/packages` folder - it is shared with the box as `C:\packages`, so you can run a command on the box or with the inline provisioner (recommended as it is a closer match to the verifier) using `--source c:\packages` as an argument for installation. If you are trying to reproduce/investigate a problem with a package already up on the website, you can use `--version number` with your install arguments and that will let you install a package that is not listed (in most cases not yet approved).
+For testing a package, you have two avenues. For a locally built package, you can drop the package into the `packages` folder in the root of the cloned repository - it is shared with the box as `C:\packages`, so you can run a command on the box or with the inline provisioner (recommended as it is a closer match to the verifier) using `--source c:\packages` as an argument for installation. If you are trying to reproduce/investigate a problem with a package already up on the website, you can use `--version number` with your install arguments and that will let you install a package that is not listed (in most cases not yet approved).
 
- * Uncomment the final string in the vagrant file and update it using one of the methods above, then run `vagrant provision`.
+ * Search the Vagrantfile for `# THIS IS WHAT YOU CHANGE`.  Uncomment and edit the line which best meets the current situation that you are testing, then run `vagrant provision`.
  * Watch the output and go to the box for further inspection if necessary.
 
 ### Make Changes and Retest
@@ -49,12 +52,15 @@ When you need to investigate making changes and rerunning the tests, remember th
 
 When you are ready to reset to the state just before installing:
 
- * Run `vagrant sandbox rollback`.
+ * Run `vagrant sandbox rollback`
 
 ### Tearing Down the Testing Environment
-**NOTE**: At any time you can stop or remove the box with `vagrant suspend`, `vagrant halt` and/or `vagrant destroy`. For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html).
+**NOTE**: At any time you can:
 
- * If you are finished with the vagrant box, you can remove your temporary copy with `vagrant destroy`.
+* stop the box with `vagrant suspend`, `vagrant halt`
+* delete the box with `vagrant destroy`
+
+For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html)
 
 ## Differences Between This and Package Verifier Service
 
