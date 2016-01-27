@@ -9,3 +9,6 @@ Write-Output "IE Enhanced Security Configuration (ESC) has been disabled."
 # http://techrena.net/disable-ie-set-up-first-run-welcome-screen/
 New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main" -Name "DisableFirstRunCustomize" -Value 1 -PropertyType "DWord" -Force | Out-Null
 Write-Output "IE first run welcome screen has been disabled."
+
+# Windows Update service should have starup type of manual
+Set-Service -Name wuauserv -StartupType Manual
