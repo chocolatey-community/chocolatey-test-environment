@@ -92,10 +92,11 @@ Vagrant.configure("2") do |config|
 
 
 $packageTestScript = <<SCRIPT
+setx.exe trigger 1  # run arbitrary win32 application so LASTEXITCODE is 0
 $ErrorActionPreference = "Stop"
 $env:PATH +=";$env:SystemDrive\\ProgramData\\chocolatey\\bin"
 
-Write-Output "Testing package if a line is uncommented. Otherwise you will see an error."
+Write-Output "Testing package if a line is uncommented."
 # THIS IS WHAT YOU CHANGE
 # - uncomment one of the two and edit it appropriately
 # - See the README for details
