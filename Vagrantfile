@@ -86,15 +86,16 @@ Vagrant.configure("2") do |config|
   else
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :keep_color => true, :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
   end
-
 
 $packageTestScript = <<SCRIPT
 setx.exe trigger 1  # run arbitrary win32 application so LASTEXITCODE is 0
 $ErrorActionPreference = "Stop"
-$env:PATH +=";$env:SystemDrive\\ProgramData\\chocolatey\\bin"
+$env:PATH +=";$($env:SystemDrive)\\ProgramData\\chocolatey\\bin"
+# https://github.com/chocolatey/choco/issues/512
+$validExitCodes = @(0, 1605, 1614, 1641, 3010)
 
 Write-Output "Testing package if a line is uncommented."
 # THIS IS WHAT YOU CHANGE
@@ -103,10 +104,14 @@ Write-Output "Testing package if a line is uncommented."
 #choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION  --allow-downgrade
 #choco.exe install -fdvy INSERT_NAME  --allow-downgrade --source "'c:\\packages;http://chocolatey.org/api/v2/'"
 
-# vagrant has issues knowing that there was an error
-if ($LASTEXITCODE -ne 0) {
-  exit 1
+$exitCode = $LASTEXITCODE
+
+Write-Host "Exit code was $exitCode"
+if ($validExitCodes -contains $exitCode) {
+  Exit 0
 }
+
+Exit $exitCode
 SCRIPT
 
   if Vagrant::VERSION < '1.8.0'
