@@ -119,5 +119,4 @@ SCRIPT
   else
     config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
   end
-
 end
