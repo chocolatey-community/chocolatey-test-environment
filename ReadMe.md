@@ -22,8 +22,6 @@ To get started, ensure you have the following installed:
  * Virtualbox 4.3.28+ (5.x may have issues, so try to stay in 4.3.x series)
  * vagrant sahara plugin (`vagrant plugin install sahara`)
 
-You can also install Vagrant/Virtualbox on Windows by running `choco install packages.config`
-
 ## Running Verification Manually
 
 **NOTE**: The CDN for packages on https://chocolatey.org will only update every 30 minutes. This means if you just pushed an updated version, within 30 minutes from the last access time of the package it will be updated. This is why the validator and verifier wait for 31 minutes prior to testing a package.
@@ -57,7 +55,8 @@ When you are ready to reset to the state just before installing:
  1. Run `vagrant sandbox rollback`
  1. Follow the steps in testing a package (previous section).
 
-### Tearing Down the Testing Environment
+### Tearing Down the Testing Environment
+
 **NOTE**: At any time you can:
 
 * stop the box with `vagrant suspend`, `vagrant halt`
