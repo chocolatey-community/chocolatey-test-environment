@@ -3,7 +3,7 @@ $installLatestBeta = $true
 #$env:chocolateyVersion="0.9.10-beta-20160402"
 #$env:chocolateyVersion="0.9.8.33"
 $installLocalFile = $false
-$localChocolateyPackageFilePath = 'c:\packages\chocolatey.0.9.10-beta-20160509.nupkg'
+$localChocolateyPackageFilePath = 'c:\packages\chocolatey.0.10.0.nupkg'
 
 $ChocoInstallPath = "$($env:SystemDrive)\ProgramData\Chocolatey\bin"
 $env:ChocolateyInstall = "$($env:SystemDrive)\ProgramData\Chocolatey"
