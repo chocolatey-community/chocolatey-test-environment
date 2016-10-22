@@ -18,9 +18,16 @@ You need a computer with:
 ## Setup
 
 To get started, ensure you have the following installed:
- * Vagrant 1.8.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 1.8.x.
- * Virtualbox 4.3.28+ (5.x may have issues, so try to stay in 4.3.x series)
- * vagrant sahara plugin (`vagrant plugin install sahara`)
+* **VirtualBox 4.3.28+** [ `choco install virtualbox` ]  
+5.x may have issues, so try to stay in 4.3.x series  
+* **Vagrant 1.8.1+**  [ `choco install vagrant` ]  
+Linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+, but you will get the best performance with 1.8.x.
+  * **Vagrant Sahara plugin** [`vagrant plugin install sahara`]
+
+To install everything required execute:
+
+    choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
+
 
 ## Running Verification Manually
 
