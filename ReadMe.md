@@ -22,6 +22,11 @@ To get started, ensure you have the following installed:
  * Virtualbox 4.3.28+ (5.x may have issues, so try to stay in 4.3.x series)
  * vagrant sahara plugin (`vagrant plugin install sahara`)
 
+To install everything required 
+
+    choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
+
+
 ## Running Verification Manually
 
 **NOTE**: The CDN for packages on https://chocolatey.org will only update every 30 minutes. This means if you just pushed an updated version, within 30 minutes from the last access time of the package it will be updated. This is why the validator and verifier wait for 31 minutes prior to testing a package.
