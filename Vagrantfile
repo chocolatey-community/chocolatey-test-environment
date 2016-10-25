@@ -79,12 +79,12 @@ Vagrant.configure("2") do |config|
   # In this specific vagrant usage, we are using the shell provisioner
   # http://docs.vagrantup.com/v2/provisioning/shell.html
 
-  puts ENV['PACKAGES']
-  scripts = [   { :path => "shell/PrepareWindows.ps1" },
+  scripts = [
+                { :path => "shell/PrepareWindows.ps1" },
                 { :path => "shell/InstallNet4.ps1" },
                 { :path => "shell/InstallChocolatey.ps1" },
                 { :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"},
-                { :path => "shell/TestPackages.ps1", :args => "\'#{ENV['PACKAGES']}\'" },
+                { :path => "shell/TestPackages.ps1", :args => ENV['PACKAGES'] },
                 { :path => "User.ps1"} ]
 
   scripts.each do |s|
