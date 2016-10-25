@@ -1,4 +1,5 @@
 Everything in here is ignored.
 
-- Drop your nupkg file here to test it using local source
-- Drop your nupkg file in subfolder remote to test it using remote source
+- Drop your nupkg files here to test them all out
+- Use environment variable $Env:PACKAGES to pass names and versions of community packages to install:
+    $Env:PACKAGES = 'copyq dbeaver:2.7.1'; vagrant up --provision
