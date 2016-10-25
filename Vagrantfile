@@ -79,17 +79,16 @@ Vagrant.configure("2") do |config|
   # In this specific vagrant usage, we are using the shell provisioner
   # http://docs.vagrantup.com/v2/provisioning/shell.html
 
-  if Vagrant::VERSION < '1.8.0'
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1"
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
-    config.vm.provision :shell, :path => "shell/TestPackage.ps1"
-  else
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/TestPackage.ps1", :powershell_elevated_interactive => true
+  puts ENV['PACKAGES']
+  scripts = [   { :path => "shell/PrepareWindows.ps1" },
+                { :path => "shell/InstallNet4.ps1" },
+                { :path => "shell/InstallChocolatey.ps1" },
+                { :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"},
+                { :path => "shell/TestPackages.ps1", :args => "\'#{ENV['PACKAGES']}\'" },
+                { :path => "User.ps1"} ]
+
+  scripts.each do |s|
+      s[:powershell_elevated_interactive] = true if Vagrant::VERSION >= '1.8.0'
+      config.vm.provision :shell, s
   end
 end
