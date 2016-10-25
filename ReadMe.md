@@ -48,10 +48,14 @@ To install everything required execute:
 
 For testing a package, you have two avenues. For a locally built package, you can drop the package into the `packages` folder in the root of the cloned repository - it is shared with the box as `C:\packages`, so you can run a command on the box or with the inline provisioner (recommended as it is a closer match to the verifier) using `--source c:\packages` as an argument for installation. If you are trying to reproduce/investigate a problem with a package already up on the website, you can use `--version number` with your install arguments and that will let you install a package that is not listed (in most cases not yet approved).
 
- 1. Search the Vagrantfile for `# THIS IS WHAT YOU CHANGE`.  Uncomment and edit the line which best meets the current situation that you are testing.
+ 1. Search the User.ps1 script for `# THIS IS WHAT YOU CHANGE`.  Uncomment and edit the line which best meets the current situation that you are testing.
  1. Run `vagrant provision`.
  1. Watch the output and go to the box for further inspection if necessary.
  1. If you need to change output or try something else, read the next section.
+
+You can also use environment variable `$Env:PACKAGES` to pass names and versions of community packages to install:
+
+    $Env:PACKAGES = 'copyq dbeaver:2.7.1'; vagrant up --provision
 
 ### Make Changes and Retest
 
