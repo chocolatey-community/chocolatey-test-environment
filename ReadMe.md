@@ -46,16 +46,70 @@ To install everything required execute:
 
 ### Testing a Package
 
+Testing can be manual or fully automatic. 
+
+#### Manual testing
+
 For testing a package, you have two avenues. For a locally built package, you can drop the package into the `packages` folder in the root of the cloned repository - it is shared with the box as `C:\packages`, so you can run a command on the box or with the inline provisioner (recommended as it is a closer match to the verifier) using `--source c:\packages` as an argument for installation. If you are trying to reproduce/investigate a problem with a package already up on the website, you can use `--version number` with your install arguments and that will let you install a package that is not listed (in most cases not yet approved).
 
- 1. Search the User.ps1 script for `# THIS IS WHAT YOU CHANGE`.  Uncomment and edit the line which best meets the current situation that you are testing.
+ 1. Search the `User.ps1` script for `# THIS IS WHAT YOU CHANGE`.  Uncomment and edit the line which best meets the current situation that you are testing.
  1. Run `vagrant provision`.
  1. Watch the output and go to the box for further inspection if necessary.
- 1. If you need to change output or try something else, read the next section.
 
-You can also use environment variable `$Env:PACKAGES` to pass names and versions of community packages to install:
+
+#### Automatic testing
+
+You can just copy your packages to the `packages` directory and automatic install will run during provision.  
+Use environment variable `$Env:PACKAGES` to pass names and versions of community packages to install:
 
     $Env:PACKAGES = 'copyq dbeaver:2.7.1'; vagrant up --provision
+
+For best experience use [AU](https://github.com/majkinetor/au) PowerShell module and its function `Test-Package` that can test install and/or uninstall both locally and using vagrant. 
+
+The following example will run both install and uninstall for the package 'yed' and pass it custom parameter.
+
+```powershell
+C:\au-packages\yed> $au_Vagrant = 'c:\chocolatey\chocolatey-test-environment' #you can also add this to your profile
+C:\au-packages\yed> Test-Package -VagrantClear -Parameters '/Shortcut'
+
+Package info
+  Path:         C:\au-packages\yed\yed.3.16.2.1.nupkg
+  Name:         yed
+  Version:      3.16.2.1
+  Parameters:   /Shortcut
+  Vagrant:      c:\chocolatey\chocolatey-test-environment
+
+Testing package using vagrant
+Removing existing vagrant packages
+
+<STARTS VAGRANT IN ANOTHER SHELL>
+
+==> default: Running provisioner: shell...
+    default: Running: shell/TestPackages.ps1 as c:\tmp\vagrant-shell.ps1
+==> default: ============================================================
+==> default: TESTING FOLLOWING PACKAGES: yed:3.16.2.1
+==> default: ============================================================
+==> default:
+==> default: ------------------------------------------------------------
+==> default: PACKAGE: yed:3.16.2.1
+==> default:
+==> default: OPTIONS: c:\packages\yed.3.16.2.1.xml
+==> default:
+==> default: Name                           Value
+==> default: ----                           -----
+==> default: Install                        True
+==> default: Uninstall                      True
+==> default: Parameters                     /Shortcut
+==> default: ------------------------------------------------------------
+==> default:
+==> default: TESTING INSTALL FOR yed:3.16.2.1
+==> default: Choco cmd: choco install -fy yed --allow-downgrade --version 3.16.2.1 --source "'c:\packages;http://chocolatey.org/api/v2/'"  --params '/Shortcut'
+==> default: Chocolatey v0.10.3
+==> default: Installing the following packages:
+==> default: yed
+...
+...
+```
 
 ### Make Changes and Retest
 
