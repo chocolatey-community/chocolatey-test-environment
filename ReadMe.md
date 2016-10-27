@@ -12,7 +12,7 @@ You need a computer with:
 
 * a 64-bit processor and OS
 * Intel VT-x [enabled](http://www.howtogeek.com/213795/how-to-enable-intel-vt-x-in-your-computers-bios-or-uefi-firmware/) (usually not an issue if your computer is newer than 2011). This is necessary because we are using 64bit VMs.
-* Hyper-V may need to be disabled for Virtualbox to work properly if your computer is a Windows box. **NOTE:** This may actually not be required.
+* Hyper-V may need to be disabled for Virtualbox to work properly if your computer is a Windows box. **NOTE:** This may actually not be required. If required, run `bcdedit /set hypervisorlaunchtype off` then reboot.
 * At least 10GB of free space.
 
 ## Setup
