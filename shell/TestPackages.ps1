@@ -34,7 +34,7 @@ foreach ($package in $packages) {
         $choco_cmd = "choco install -fy $name --allow-downgrade"
         $choco_cmd += if ($ver) { " --version $ver" }
         $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
-        $choco_cmd += if ($options.Parameters) { "  --params $options.Parameters" }
+        $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
 
         Write-Host "Choco cmd: $choco_cmd"
         $LastExitCode = 0
