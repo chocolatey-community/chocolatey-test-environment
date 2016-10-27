@@ -12,6 +12,26 @@ if ($CommunityPackages = $args) {
 }
 
 $packages += ls c:\packages\*.nupkg | Split-Path -Leaf | % {(($_ -split '\.',2) -join ':') -replace '.nupkg' }
+<<<<<<< HEAD
+Write-Host ('-'*60) "`n" 'PACKAGES: ' "$packages" "`n" ('-'*60)
+
+foreach ($package in $packages) {
+    $p = $package -split ':'; $name = $p[0]; $ver = $p[1]
+
+    $choco_cmd = "choco install -fy $name --allow-downgrade"
+    $choco_cmd += if ($ver) { " --version $ver" }
+    $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
+
+    Write-Host "Choco cmd: $choco_cmd"
+    $LastExitCode = 0
+    iex $choco_cmd
+    $exitCode = $LastExitCode
+
+    if ($validExitCodes -contains $exitCode) {
+        Write-Host "Exit code for $package was $exitCode"
+    } else {
+        Write-Error "Exit code for package $name is $exitCode"
+=======
 Write-Host ("{0}`n{1}`n{0}`n" -f ('='*60), "TESTING FOLLOWING PACKAGES: $packages")
 
 foreach ($package in $packages) {
@@ -34,7 +54,7 @@ foreach ($package in $packages) {
         $choco_cmd = "choco install -fy $name --allow-downgrade"
         $choco_cmd += if ($ver) { " --version $ver" }
         $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
-        $choco_cmd += if ($options.Parameters) { "  --params $options.Parameters" }
+        $choco_cmd += if ($options.Parameters) { "  --params " + $options.Parameters }
 
         Write-Host "Choco cmd: $choco_cmd"
         $LastExitCode = 0
@@ -53,5 +73,6 @@ foreach ($package in $packages) {
         $choco_cmd = "choco uninstall -fy $name"
         Write-Host "Choco cmd: $choco_cmd"
         iex $choco_cmd
+>>>>>>> vagrant
     }
 }
