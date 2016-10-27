@@ -85,8 +85,9 @@ Vagrant.configure("2") do |config|
                 { :path => "shell/InstallNet4.ps1" },
                 { :path => "shell/InstallChocolatey.ps1" },
                 { :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"},
-                { :path => "shell/TestPackages.ps1", :args => ENV['PACKAGES'] },
-                { :path => "User.ps1"} ]
+                { :path => "shell/TestPackages.ps1", :args => ENV['PACKAGES'], :run => "always" },
+                { :path => "User.ps1", :run => "always" }
+            ]
 
   scripts.each do |s|
       s[:powershell_elevated_interactive] = true if Vagrant::VERSION >= '1.8.0'

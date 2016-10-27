@@ -36,7 +36,7 @@ foreach ($package in $packages) {
         $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
         $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
 
-        Write-Host "Choco cmd: $choco_cmd"
+        Write-Host "CMD: $choco_cmd"
         $LastExitCode = 0
         iex $choco_cmd
         $exitCode = $LastExitCode
