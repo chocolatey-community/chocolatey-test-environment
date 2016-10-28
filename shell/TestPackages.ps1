@@ -29,24 +29,28 @@ foreach ($package in $packages) {
 
     $do_install = if ($options) { $options.Install } else { $true }
 
-    if ($do_install) {
-        Write-Host 'TESTING INSTALL FOR' $package
-        $choco_cmd = "choco install -fy $name --allow-downgrade"
-        $choco_cmd += if ($ver) { " --version $ver" }
-        $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
-        $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
+    if ($do_install) { Write-Host 'TESTING INSTALL FOR' $package }
 
-        Write-Host "CMD: $choco_cmd"
-        $LastExitCode = 0
-        iex $choco_cmd
-        $exitCode = $LastExitCode
-
-        if ($validExitCodes -contains $exitCode) {
-            Write-Host "Exit code for $package was $exitCode"
-        } else {
-            Write-Error "Exit code for package $name is $exitCode"
-        }
+    $choco_cmd = "choco install -fy $name --allow-downgrade"
+    $choco_cmd += if ($ver) { " --version $ver" }
+    $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
+    $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
+    if (!$do_install) {
+        Write-Host 'Testing install disabled, registering package'
+        $choco_cmd += ' --skip-powershell'
     }
+
+    Write-Host "CMD: $choco_cmd"
+    $LastExitCode = 0
+    iex $choco_cmd
+    $exitCode = $LastExitCode
+
+    if ($validExitCodes -contains $exitCode) {
+        Write-Host "Exit code for $package was $exitCode"
+    } else {
+        Write-Error "Exit code for package $name is $exitCode"
+    }
+
 
     if ($options.Uninstall) {
         Write-Host 'TESTING UNINSTALL FOR' $package
