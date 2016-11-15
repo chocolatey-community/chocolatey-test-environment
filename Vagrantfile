@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
 
     # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
     config.vm.synced_folder "packages", "/packages"
+    config.vm.synced_folder "shell", "/scripts"
     #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
     # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
     #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
