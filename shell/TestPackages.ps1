@@ -11,7 +11,8 @@ if ($CommunityPackages = $args) {
     $packages += $CommunityPackages
 }
 
-$packages += ls c:\packages\*.nupkg | Split-Path -Leaf | % {(($_ -split '\.',2) -join ':') -replace '.nupkg' }
+#Add local packages to provided list of remote packages
+$packages += ls c:\packages\*.nupkg | Split-Path -Leaf | % { $_ -replace '(\.\d+)+([^-\.]+)?.nupkg' }
 Write-Host ("{0}`n{1}`n{0}`n" -f ('='*60), "TESTING FOLLOWING PACKAGES: $packages")
 
 foreach ($package in $packages) {
@@ -36,7 +37,7 @@ foreach ($package in $packages) {
     $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
     $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
     if (!$do_install) {
-        Write-Host 'Testing install disabled, registering package'
+        Write-Host 'TESTING INSTALL DISABLED, REGISTERING PACKAGE'
         $choco_cmd += ' --skip-powershell'
     }
 
