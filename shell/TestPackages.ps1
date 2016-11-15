@@ -12,7 +12,7 @@ if ($CommunityPackages = $args) {
 }
 
 #Add local packages to provided list of remote packages
-$packages += ls c:\packages\*.nupkg | Split-Path -Leaf | % { $_ -replace '(\.\d+)+([^-\.]+)?.nupkg' }
+$packages += ls c:\packages\*.nupkg | Split-Path -Leaf | % { ($_ -replace '((\.\d+)+(-[^-\.]+)?).nupkg', ':$1').Replace(':.', ':') }
 Write-Host ("{0}`n{1}`n{0}`n" -f ('='*60), "TESTING FOLLOWING PACKAGES: $packages")
 
 foreach ($package in $packages) {
