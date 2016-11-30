@@ -15,5 +15,12 @@ Set-Service -Name wuauserv -StartupType Manual
 Write-Host 'Setting tray icons to always show'
 sp HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer EnableAutoTray 0
 
+Write-Host 'Enable acpi shutdown'
+sp HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system shutdownwithoutlogon 1
+gpupdate /force
+
 Write-Host "Restarting Explorer"
 Stop-Process -Name Explorer -Force
+
+
+
