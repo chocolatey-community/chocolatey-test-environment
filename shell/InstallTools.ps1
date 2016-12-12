@@ -3,6 +3,7 @@ cinst conemu
 cinst notepadplusplus
 cinst everything
 cinst myuninst
+cinst rapidee
 cinst copyq
 
 mkdir (Split-Path $Profile) -ea 0
