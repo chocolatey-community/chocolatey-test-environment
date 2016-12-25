@@ -15,6 +15,7 @@ function c() {
 }
 '@ -replace "`n", "`r`n" | Out-File -Append $Profile
 
+. $PSScriptRoot\Register-LoginTask.ps1
 Register-LoginTask "$Env:PROGRAMFILES\Everything\Everything.exe" -Arguments '-startup' -RunElevated
 Register-LoginTask "${env:ProgramFiles(x86)}\Copyq\copyq.exe" -RunElevated
 
