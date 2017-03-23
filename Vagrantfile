@@ -68,12 +68,14 @@ Vagrant.configure("2") do |config|
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
 
   # Port forward WinRM / RDP
-  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true
-  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+  # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395), 
+  #  add host_ip: "127.0.0.1" for it to work
+  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true #, host_ip: "127.0.0.1"
   # Port forward SSH (ssh is forwarded by default in most versions of Vagrant,
   # but be sure). This is not necessary if you are not using SSH, but it doesn't
   # hurt anything to have it
-  config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
+  config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true #, host_ip: "127.0.0.1"
 
   # Provisioners - http://docs.vagrantup.com/v2/provisioning/
   # In this specific vagrant usage, we are using the shell provisioner
