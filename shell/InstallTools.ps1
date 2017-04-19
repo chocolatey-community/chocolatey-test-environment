@@ -1,4 +1,4 @@
-cinst au
+#cinst au # AU Requires 5.0 now which isn't in the machine and requires manual powershell update: `cinst powershell`
 cinst conemu
 cinst notepadplusplus
 cinst everything
