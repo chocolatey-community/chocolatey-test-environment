@@ -63,6 +63,7 @@ Vagrant.configure("2") do |config|
   # naming of this directory being `vagrant` is just a coincedence).
   # Share `packages` directory as `C:\packages`
   config.vm.synced_folder "packages", "/packages"
+  config.vm.synced_folder "shell", "/shell"
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
@@ -80,45 +81,17 @@ Vagrant.configure("2") do |config|
   # Provisioners - http://docs.vagrantup.com/v2/provisioning/
   # In this specific vagrant usage, we are using the shell provisioner
   # http://docs.vagrantup.com/v2/provisioning/shell.html
-  if Vagrant::VERSION < '1.8.0'
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1"
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
-  else
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
-  end
 
-$packageTestScript = <<SCRIPT
-setx.exe trigger 1  # run arbitrary win32 application so LASTEXITCODE is 0
-$ErrorActionPreference = "Stop"
-$env:PATH +=";$($env:SystemDrive)\\ProgramData\\chocolatey\\bin"
-# https://github.com/chocolatey/choco/issues/512
-$validExitCodes = @(0, 1605, 1614, 1641, 3010)
+  scripts = [
+                { :path => "shell/PrepareWindows.ps1" },
+                { :path => "shell/InstallNet4.ps1" },
+                { :path => "shell/InstallChocolatey.ps1" },
+                { :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"},
+                { :path => "shell/TestPackages.ps1", :args => ENV['PACKAGES'] },
+                { :path => "User.ps1"} ]
 
-Write-Output "Testing package if a line is uncommented."
-# THIS IS WHAT YOU CHANGE
-# - uncomment one of the two and edit it appropriately
-# - See the README for details
-#choco.exe install -fdvy INSERT_NAME --version INSERT_VERSION  --allow-downgrade
-#choco.exe install -fdvy INSERT_NAME  --allow-downgrade --source "'c:\\packages;http://chocolatey.org/api/v2/'"
-
-$exitCode = $LASTEXITCODE
-
-Write-Host "Exit code was $exitCode"
-if ($validExitCodes -contains $exitCode) {
-  Exit 0
-}
-
-Exit $exitCode
-SCRIPT
-
-  if Vagrant::VERSION < '1.8.0'
-    config.vm.provision :shell, :inline => $packageTestScript
-  else
-    config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
+  scripts.each do |s|
+      s[:powershell_elevated_interactive] = true if Vagrant::VERSION >= '1.8.0'
+      config.vm.provision :shell, s
   end
 end
