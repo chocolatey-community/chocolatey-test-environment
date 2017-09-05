@@ -40,6 +40,27 @@ Vagrant.configure("2") do |config|
     v.linked_clone = true if Vagrant::VERSION >= '1.8.0'
   end
 
+  # https://www.vagrantup.com/docs/hyperv/configuration.html
+  # https://technet.microsoft.com/en-us/library/dn798297(v=ws.11).aspx
+  config.vm.provider :hyperv do |v, override|
+    # 4GB RAM
+    v.memory = 4096
+    # 2 CPUs
+    v.cpus = 2
+    # The time in seconds to wait for the virtual machine to report an IP address
+    v.ip_address_timeout = 130
+    # Use differencing disk instead of cloning whole VHD
+    v.differencing_disk = true
+    v.vm_integration_services = {
+      guest_service_interface: true,
+      heartbeat: true,
+      key_value_pair_exchange: true,
+      shutdown: true,
+      time_synchronization: true,
+      vss: true
+  }
+  end
+
   # timeout of waiting for image to stop running - may be a deprecated setting
   config.windows.halt_timeout = 20
   # username/password for accessing the image
@@ -68,7 +89,7 @@ Vagrant.configure("2") do |config|
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
 
   # Port forward WinRM / RDP
-  # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395), 
+  # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395),
   #  add host_ip: "127.0.0.1" for it to work
   config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
   config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true #, host_ip: "127.0.0.1"
