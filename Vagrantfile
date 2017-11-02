@@ -14,7 +14,7 @@ end
 Vagrant.configure("2") do |config|
   # This setting will download the atlas box at
   # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
-  config.vm.box = "ferventcoder/win2012r2-x64-nocm"
+  config.vm.box = "BasicTheProgram/windows_2016"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--vram", 32]
     # For better DNS resolution
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    # No audo
+    # No audio
     v.customize ["modifyvm", :id, "--audio", "none"]
     # Clipboard enabled
     v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
@@ -84,6 +84,7 @@ Vagrant.configure("2") do |config|
   # naming of this directory being `vagrant` is just a coincedence).
   # Share `packages` directory as `C:\packages`
   config.vm.synced_folder "packages", "/packages"
+  config.vm.synced_folder "/Users/tanner/projects/", "/projects"
 
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
