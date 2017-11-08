@@ -19,7 +19,6 @@ To install everything and run machine:
 
 ```powershell
 choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
-mkdir c:\packages   #copy packages to test here
 vagrant up
 ```
 
