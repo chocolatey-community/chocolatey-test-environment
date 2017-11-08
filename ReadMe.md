@@ -1,8 +1,6 @@
 # Chocolatey Testing Environment
 
-A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages. Over time this will add more Windows platforms for testing.
-
-When creating packages or testing other parts of Chocolatey, this environment provides a good base for an independent testing minus any dependencies you may already have installed. It also allows you to completely destroy an environment and then just tear it down without worry about messing up something on your own system.
+A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages.
 
 When creating packages, please review https://github.com/chocolatey/choco/wiki/CreatePackages
 
@@ -17,16 +15,21 @@ You need a computer with:
 
 ## Setup
 
-To get started, ensure you have the following installed:
+To install everything and run machine:
+
+```powershell
+choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
+mkdir c:\packages   #copy packages to test here
+vagrant up
+```
+
+Details:
+
 * **VirtualBox 4.3.28+** [ `choco install virtualbox` ]  
 5.x may have issues, so try to stay in 4.3.x series  
 * **Vagrant 1.8.1+**  [ `choco install vagrant` ]  
 Linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+, but you will get the best performance with 1.8.x.
   * **Vagrant Sahara plugin** [`vagrant plugin install sahara`]
-
-To install everything required execute:
-
-    choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
 
 
 ## Running Verification Manually
