@@ -26,6 +26,9 @@ Vagrant.configure("2") do |config|
     config.vm.guest             = :windows
     config.vm.communicator      = "winrm"
 
+    config.ssh.username = "vagrant"
+    config.ssh.password = "vagrant"
+
     # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
     config.vm.synced_folder "packages", "/packages"
     config.vm.synced_folder "shell", "/scripts"

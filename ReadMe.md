@@ -148,4 +148,10 @@ There are a couple of difference between the [verifier service]() and this envir
 
 ## Troubleshooting
 
-You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+### An authorization error occurred while connecting to WinRM.
+
+Install latest VBox Guest Additions
+
+### A Vagrant environment or target machine is required to run this command
+
+Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
