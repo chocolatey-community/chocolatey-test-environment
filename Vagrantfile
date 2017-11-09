@@ -84,7 +84,6 @@ Vagrant.configure("2") do |config|
   # naming of this directory being `vagrant` is just a coincedence).
   # Share `packages` directory as `C:\packages`
   config.vm.synced_folder "packages", "/packages"
-  config.vm.synced_folder "/Users/tanner/projects/", "/projects"
 
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
@@ -109,11 +108,11 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
   else
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallToolchain.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1",privileged: false
+    config.vm.provision :shell, :path => "shell/InstallToolchain.ps1", privileged: false
   end
 
 $packageTestScript = <<SCRIPT
@@ -143,6 +142,6 @@ SCRIPT
   if Vagrant::VERSION < '1.8.0'
     config.vm.provision :shell, :inline => $packageTestScript
   else
-    config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
+    config.vm.provision :shell, :inline => $packageTestScript,  privileged: false
   end
 end
