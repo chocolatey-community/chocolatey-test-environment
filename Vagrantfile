@@ -14,7 +14,8 @@ end
 Vagrant.configure("2") do |config|
   # This setting will download the atlas box at
   # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
-  config.vm.box = "BasicTheProgram/windows_2016"
+  # config.vm.box = "BasicTheProgram/windows_2016"
+  config.vm.box = "/Users/tanner/projects/packer/Stefan-Schere-packer-windows/windows_10_virtualbox.box"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -88,6 +89,12 @@ Vagrant.configure("2") do |config|
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
+
+  # Access to chocolate project folder
+  config.vm.synced_folder "/Users/tanner/projects/", "/projects"
+
+  # Access to Dropbox folder
+  config.vm.synced_folder "/Users/tanner/Dropbox/techs@real-time.com/Windows/", "/dropbox"
 
   # Port forward WinRM / RDP
   # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395),
