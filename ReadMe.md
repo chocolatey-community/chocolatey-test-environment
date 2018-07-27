@@ -34,7 +34,7 @@ To get started, ensure you have the following installed:
  1. Run `vagrant up` to prepare the machine for testing.
    * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
  1. Now the box is ready for you to start testing against.
- 1. Run the following command: `vagrant snapshot create good`.  This takes a snapshot of the VM using the built-in snapshot functionality. This means that after testing packages, the VM can be returned to this known "good" state.
+ 1. Run the following command: `vagrant snapshot save good`.  This takes a snapshot of the VM using the built-in snapshot functionality. This means that after testing packages, the VM can be returned to this known "good" state.
 
 ### Testing a Package
 
