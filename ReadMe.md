@@ -22,6 +22,8 @@ To get started, ensure you have the following installed:
  * Virtualbox 4.3.28+ (5.x may have issues, so try to stay in 4.3.x series)
  * vagrant sahara plugin (`vagrant plugin install sahara`)
 
+**NOTE:** If you decide to run with version 1.8.1 of Vagrant, you are going to need to set the `VAGRANT_SERVER_URL` environment variable as described in this [forum post](https://groups.google.com/forum/#!msg/vagrant-up/H8C68UTkosU/qz4YUmAgBAAJ), otherwise, you will get an HTTP 404 error when attempting to download the base vagrant box used here.
+
 ## Running Verification Manually
 
 **NOTE**: The CDN for packages on https://chocolatey.org will only update every 30 minutes. This means if you just pushed an updated version, within 30 minutes from the last access time of the package it will be updated. This is why the validator and verifier wait for 31 minutes prior to testing a package.
