@@ -77,6 +77,12 @@ Vagrant.configure("2") do |config|
     config.vm.communicator = "winrm"
   end
 
+  if Vagrant::VERSION >= '1.1.0'
+    # https://github.com/dotless-de/vagrant-vbguest
+    # Automatically installs the host's VirtualBox Guest Additions on the guest system.
+    config.vbguest.auto_update = true
+  end
+
   # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
   # A synced folder is a fancy term for shared folders - it takes a folder on
   # the host and shares it with the guest (vagrant) image. The entire folder
