@@ -36,6 +36,8 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--usb", "off"]
     # Huge performance gain here
     v.linked_clone = true if Vagrant::VERSION >= '1.8.0'
+    # virtualbox name 
+    v.name = "chocolatey_test_environment_windows_10"
   end
 
   # https://www.vagrantup.com/docs/hyperv/configuration.html
