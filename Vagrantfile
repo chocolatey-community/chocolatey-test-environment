@@ -12,7 +12,7 @@ end
 
 # http://docs.vagrantup.com/v2/vagrantfile/machine_settings.html
 Vagrant.configure("2") do |config|
-  config.vm.box = "/Users/tanner/projects/packer/Stefan-Schere-packer-windows/windows_10_virtualbox.box"
+  config.vm.box = "/Users/tanner/projects/packer/Stefan-Schere-packer-windows/windows_2016_virtualbox.box"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
