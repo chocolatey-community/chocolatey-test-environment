@@ -50,7 +50,11 @@ Vagrant.configure("2") do |config|
     # The time in seconds to wait for the virtual machine to report an IP address
     v.ip_address_timeout = 130
     # Use differencing disk instead of cloning whole VHD
-    v.differencing_disk = true
+    if Vagrant::VERSION >= '2.1.2'
+      v.linked_clone = true
+    else
+      v.differencing_disk = true
+    end
     v.vm_integration_services = {
       guest_service_interface: true,
       heartbeat: true,
