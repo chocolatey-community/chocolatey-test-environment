@@ -12,7 +12,7 @@ end
 
 # http://docs.vagrantup.com/v2/vagrantfile/machine_settings.html
 Vagrant.configure("2") do |config|
-  config.vm.box = "/Users/tanner/projects/packer/Stefan-Schere-packer-windows/windows_2016_virtualbox.box"
+  config.vm.box = "BasicTheProgram/windows_2016"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     # Huge performance gain here
     v.linked_clone = true if Vagrant::VERSION >= '1.8.0'
     # virtualbox name 
-    v.name = "chocolatey_test_environment_windows_10"
+    v.name = "chocolatey_test_environment_windows_2016"
   end
 
   # https://www.vagrantup.com/docs/hyperv/configuration.html
