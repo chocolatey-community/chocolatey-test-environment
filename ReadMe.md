@@ -83,4 +83,12 @@ There are a couple of difference between the [verifier service]() and this envir
 
 ## Troubleshooting
 
-You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+### Error: "A Vagrant environment or target machine is required to run this command."
+
+Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+
+### Error: "WinRM: Warning: Authentication failure. Retrying..." and when the machine boots the C:\packages" folder is not present (and other configuration has not occurred).
+
+Edit Vagrantfile and find the `# Port forward WinRM / RDP` section. uncomment `#, host_ip: "127.0.0.1"` (remove the `#`). Run `vagrant up` again.
+
+  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true , host_ip: "127.0.0.1"
