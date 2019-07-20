@@ -6,6 +6,18 @@ When creating packages or testing other parts of Chocolatey, this environment pr
 
 When creating packages, please review https://github.com/chocolatey/choco/wiki/CreatePackages
 
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Setup](#setup)
+- [Running Verification Manually](#running-verification-manually)
+  - [Preparing the Testing Environment](#preparing-the-testing-environment)
+  - [Testing a Package](#testing-a-package)
+  - [Make Changes and Retest](#make-changes-and-retest)
+  - [Tearing Down the Testing Environment](#tearing-down-the-testing-environment)
+- [Differences Between This and Package Verifier Service](#differences-between-this-and-package-verifier-service)
+- [Troubleshooting](#troubleshooting)
+
 ## Requirements
 
 You need a computer with:
