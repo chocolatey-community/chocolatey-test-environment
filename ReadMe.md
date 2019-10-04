@@ -23,6 +23,8 @@ choco install virtualbox
 
 # Only if you use Hyper-V
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+
+
 choco install vagrant
 refreshenv
 vagrant plugin install sahara
@@ -45,8 +47,6 @@ Linked clones is the huge reason here. You can technically use any version of Va
 
 ## Running Verification Manually
 
-**NOTE**: The CDN for packages on https://chocolatey.org will only update every 30 minutes. This means if you just pushed an updated version, within 30 minutes from the last access time of the package it will be updated. This is why the validator and verifier wait for 31 minutes prior to testing a package.
-
 ### Preparing the Testing Environment
 
  1. Ensure setup above is good on your machine.
@@ -56,7 +56,7 @@ Linked clones is the huge reason here. You can technically use any version of Va
  4. Run `vagrant up` to prepare the machine for testing.
    * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
  5. Now the box is ready for you to start testing against.
- 1. Run the following command: `vagrant sandbox on`.  This takes a snapshot of the VM using the [vagrant plugin](https://github.com/jedi4ever/sahara) that was installed earlier. This means that after testing packages, the VM can be returned to this known "good" state.
+ 6. Run the following command: `vagrant sandbox on`.  This takes a snapshot of the VM using the [vagrant plugin](https://github.com/jedi4ever/sahara) that was installed earlier. This means that after testing packages, the VM can be returned to this known "good" state.
 
 ### Testing a Package
 
@@ -84,7 +84,7 @@ The following example will run both install and uninstall for the package 'yed' 
 
 ```powershell
 C:\au-packages\yed> $au_Vagrant = 'c:\chocolatey\chocolatey-test-environment' #you can also add this to your profile
-C:\au-packages\yed> Test-Package -VagrantClear -Parameters '/Shortcut'
+C:\au-packages\yed> Test-Package -Parameters '/Shortcut'
 
 Package info
   Path:         C:\au-packages\yed\yed.3.16.2.1.nupkg
@@ -142,21 +142,6 @@ When you are ready to reset to the state just before installing:
 * delete the box with `vagrant destroy`
 
 For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html)
-
-## Differences Between This and Package Verifier Service
-
-There are a couple of difference between the [verifier service]() and this environment.
-
- * The verifier is run without the GUI - meaning it is run in a headless state. There is no box to interact with.
- * The verifier only runs against Windows 2012 R2 currently. This repo is adding more boxes as they become available.
- * The verifier times out on waiting for a command after 12 minutes.
- * Synced folders are different - the verifier syncs the .chocolatey folder to gather the package information files.
- * Specific VM settings are different (for performance):
-    * No GUI (as previously mentioned) - `v.gui = false`
-    * 6GB RAM - `v.customize ["modifyvm", :id, "--memory", "6144"]`
-    * 4 CPUs - `v.customize ["modifyvm", :id, "--cpus", "4"]`
-    * Clipboard disabled - `v.customize ["modifyvm", :id, "--clipboard", "disabled"]`
-    * Drag and Drop disabled - `v.customize ["modifyvm", :id, "--draganddrop", "disabled"]`
 
 ## Troubleshooting
 
