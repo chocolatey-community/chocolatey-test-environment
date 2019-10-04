@@ -15,18 +15,30 @@ You need a computer with:
 
 ## Setup
 
-To install everything and run machine:
+To install prerequisites:
 
-```powershell
-choco install virtualbox vagrant; refreshenv; vagrant plugin install sahara
-vagrant up
+```ps1
+# Only if you use VirtualBox
+choco install virtualbox 
+
+# Only if you use Hyper-V
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+choco install vagrant
+refreshenv
+vagrant plugin install sahara
+```
+
+Now run one of the:
+
+```ps1
+vagrant up                       # uses vbox by default
+vagrant up --provider hyperv     # uses hyper-v
 ```
 
 Details:
 
-* **VirtualBox 4.3.28+** [ `choco install virtualbox` ]  
-5.x may have issues, so try to stay in 4.3.x series  
-* **Vagrant 1.8.1+**  [ `choco install vagrant` ]  
+* **VirtualBox 4.3.28+** [ `choco install virtualbox` ]
+* **Vagrant 1.8.1+**  [ `choco install vagrant` ]
 Linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+, but you will get the best performance with 1.8.x.
   * **Vagrant Sahara plugin** [`vagrant plugin install sahara`]
 
@@ -38,12 +50,12 @@ Linked clones is the huge reason here. You can technically use any version of Va
 ### Preparing the Testing Environment
 
  1. Ensure setup above is good on your machine.
- 1. Fork and Clone this repository
- 1. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
+ 2. Fork and Clone this repository
+ 3. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
    * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
- 1. Run `vagrant up` to prepare the machine for testing.
+ 4. Run `vagrant up` to prepare the machine for testing.
    * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
- 1. Now the box is ready for you to start testing against.
+ 5. Now the box is ready for you to start testing against.
  1. Run the following command: `vagrant sandbox on`.  This takes a snapshot of the VM using the [vagrant plugin](https://github.com/jedi4ever/sahara) that was installed earlier. This means that after testing packages, the VM can be returned to this known "good" state.
 
 ### Testing a Package
