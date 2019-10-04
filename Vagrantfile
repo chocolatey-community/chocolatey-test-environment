@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
     config.vm.box = "ferventcoder/win2012r2-x64-nocm"
 
     # http://docs.vagrantup.com/v2/virtualbox/configuration.html
-    config.vm.provider :virtualbox do |v, override|
+    config.vm.provider :virtualbox do |v|
         v.gui = true
         v.linked_clone = true
 
@@ -18,6 +18,11 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
         v.customize ["modifyvm", :id, "--draganddrop", "hosttoguest"]
         v.customize ["modifyvm", :id, "--usb", "off"]
+    end
+
+    config.vm.provider :hyperv do |v|
+        v.memory = 4096
+        v.cpus = 4
     end
 
     config.windows.halt_timeout = 20            # timeout of waiting for image to stop running - may be a deprecated setting
@@ -46,7 +51,7 @@ Vagrant.configure("2") do |config|
                 { :path => "shell/InstallNet4.ps1" },
                 { :path => "shell/InstallChocolatey.ps1" },
                 { :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"},
-                { :path => "shell/InstallTools.ps1" },
+                # { :path => "shell/InstallTools.ps1" },
                 { :path => "shell/TestPackages.ps1", :args => ENV['PACKAGES'], :run => "always" },
                 { :path => "User.ps1", :run => "always" }
               ]
