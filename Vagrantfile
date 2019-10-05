@@ -22,11 +22,11 @@ Vagrant.configure("2") do |config|
 
     # https://www.vagrantup.com/docs/hyperv/configuration.html
     # https://technet.microsoft.com/en-us/library/dn798297(v=ws.11).aspx
-    config.vm.provider :hyperv do |v, override|
+    config.vm.provider :hyperv do |v|
         v.memory = 4096
         v.cpus = 2
         v.ip_address_timeout = 130
-        v.differencing_disk = true
+        v.linked_clone = true
         v.vm_integration_services = {
             guest_service_interface: true,
             heartbeat: true,
