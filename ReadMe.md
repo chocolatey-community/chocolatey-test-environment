@@ -145,10 +145,20 @@ For more information on vagrant commands, see the [Vagrant Docs](http://docs.vag
 
 ## Troubleshooting
 
-### An authorization error occurred while connecting to WinRM.
+### An authorization error occurred while connecting to WinRM [vBox]
 
 Install latest VBox Guest Additions
 
 ### A Vagrant environment or target machine is required to run this command
 
 Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+
+### Machine can't be created due to virtual switch problem [hyper-v]
+
+Create Hyper-v switch manually with
+
+```ps1
+# Find out adapter name
+# Get-NetAdapter
+New-VMSwitch -Name DefaultSwitch -NetAdapterName Ethernet -AllowManagementOS $true  
+```
