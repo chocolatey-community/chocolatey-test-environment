@@ -1,3 +1,5 @@
+param ([switch]$Uninstall)
+
 #Params: String "pkg1:ver1 pkg2:ver2 ...". Version is optional.
 
 $Env:PATH +=";$($env:SystemDrive)\\ProgramData\\chocolatey\\bin"
@@ -28,32 +30,33 @@ foreach ($package in $packages) {
     }
     Write-Host ('-'*60) "`n"
 
-    $do_install = if ($options) { $options.Install } else { $true }
+    if (!$Uninstall) {
+        $do_install = if ($options) { $options.Install } else { $true }
 
-    if ($do_install) { Write-Host 'TESTING INSTALL FOR' $package }
+        if ($do_install) { Write-Host 'TESTING INSTALL FOR' $package }
 
-    $choco_cmd = "choco install -fy $name --allow-downgrade"
-    $choco_cmd += if ($ver) { " --version $ver" }
-    $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
-    $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
-    if (!$do_install) {
-        Write-Host 'TESTING INSTALL DISABLED, REGISTERING PACKAGE'
-        $choco_cmd += ' --skip-powershell'
+        $choco_cmd = "choco install -fy $name --allow-downgrade"
+        $choco_cmd += if ($ver) { " --version $ver" }
+        $choco_cmd += ' --source "''{0}''"' -f 'c:\packages;http://chocolatey.org/api/v2/'
+        $choco_cmd += if ($options.Parameters) { "  --params '{0}'" -f $options.Parameters }
+        if (!$do_install) {
+            Write-Host 'TESTING INSTALL DISABLED, REGISTERING PACKAGE'
+            $choco_cmd += ' --skip-powershell'
+        }
+
+        Write-Host "CMD: $choco_cmd"
+        $LastExitCode = 0
+        iex $choco_cmd
+        $exitCode = $LastExitCode
+
+        if ($validExitCodes -contains $exitCode) {
+            Write-Host "Exit code for $package was $exitCode"
+        } else {
+            Write-Error "Exit code for package $name is $exitCode"
+        }
     }
 
-    Write-Host "CMD: $choco_cmd"
-    $LastExitCode = 0
-    iex $choco_cmd
-    $exitCode = $LastExitCode
-
-    if ($validExitCodes -contains $exitCode) {
-        Write-Host "Exit code for $package was $exitCode"
-    } else {
-        Write-Error "Exit code for package $name is $exitCode"
-    }
-
-
-    if ($options.Uninstall) {
+    if ($Uninstall -or $options.Uninstall) {
         Write-Host 'TESTING UNINSTALL FOR' $package
         $choco_cmd = "choco uninstall -fy $name"
         Write-Host "Choco cmd: $choco_cmd"
