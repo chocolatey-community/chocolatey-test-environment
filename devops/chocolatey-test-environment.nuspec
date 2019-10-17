@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>chocolatey-test-environment</id>
+    <version>0.10.15</version>
+    <packageSourceUrl>https://github.com/Heteroculturalism/chocolatey-packages</packageSourceUrl>
+    <owners>Jerome Bell</owners>
+    <title>Chocolatey Test Environment</title>
+    <authors>Chocolatey Software, Inc</authors>
+    <projectUrl>https://github.com/chocolatey-community/chocolatey-test-environment</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/chocolatey/choco/master/docs/logo/chocolateyicon.gif</iconUrl>
+    <copyright>2019 Jerome Bell</copyright>
+    <licenseUrl>https://opensource.org/licenses/GPL-3.0</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/chocolatey-community/chocolatey-test-environment</projectSourceUrl>
+    <docsUrl>https://github.com/chocolatey-community/chocolatey-test-environment</docsUrl>
+    <bugTrackerUrl>https://github.com/chocolatey-community/chocolatey-test-environment/issues</bugTrackerUrl>
+    <tags>Chocolatey test</tags>
+    <summary>Sets up a local test environment for creating Chocolatey packages.</summary>
+    <description>Sets up a local test environment for creating Chocolatey packages.</description>
+    <releaseNotes>Uses Vagrant 2.2.5 and VirtualBox 6.0.12;</releaseNotes>
+    <dependencies>
+      <dependency id="vagrant" version="[2.2.5]" />
+      <dependency id="virtualbox" version="[6.0.12]" />
+      <dependency id="git" version="2.23.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
