@@ -84,7 +84,7 @@ Vagrant.configure("2") do |config|
   if Vagrant::VERSION >= '1.1.0'
     # https://github.com/dotless-de/vagrant-vbguest
     # Automatically installs the host's VirtualBox Guest Additions on the guest system.
-    config.vbguest.auto_update = true
+    # config.vbguest.auto_update = true
   end
 
   # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
