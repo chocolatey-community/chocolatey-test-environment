@@ -12,9 +12,7 @@ end
 
 # http://docs.vagrantup.com/v2/vagrantfile/machine_settings.html
 Vagrant.configure("2") do |config|
-  # This setting will download the atlas box at
-  # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
-  config.vm.box = "ferventcoder/win2012r2-x64-nocm"
+  config.vm.box = "BasicTheProgram/windows_2016"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -29,7 +27,7 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--vram", 32]
     # For better DNS resolution
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    # No audo
+    # No audio
     v.customize ["modifyvm", :id, "--audio", "none"]
     # Clipboard enabled
     v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
@@ -38,6 +36,8 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--usb", "off"]
     # Huge performance gain here
     v.linked_clone = true if Vagrant::VERSION >= '1.8.0'
+    # virtualbox name 
+    v.name = "chocolatey_test_environment_windows_2016"
   end
 
   # https://www.vagrantup.com/docs/hyperv/configuration.html
@@ -82,6 +82,12 @@ Vagrant.configure("2") do |config|
     config.vm.communicator = "winrm"
   end
 
+  if Vagrant::VERSION >= '1.1.0'
+    # https://github.com/dotless-de/vagrant-vbguest
+    # Automatically installs the host's VirtualBox Guest Additions on the guest system.
+    # config.vbguest.auto_update = true
+  end
+
   # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
   # A synced folder is a fancy term for shared folders - it takes a folder on
   # the host and shares it with the guest (vagrant) image. The entire folder
@@ -89,9 +95,16 @@ Vagrant.configure("2") do |config|
   # naming of this directory being `vagrant` is just a coincedence).
   # Share `packages` directory as `C:\packages`
   config.vm.synced_folder "packages", "/packages"
+
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
+
+  # Access to chocolate project folder
+  config.vm.synced_folder "/Users/tanner/projects/", "/projects"
+
+  # Access to Dropbox folder
+  config.vm.synced_folder "/Users/tanner/Dropbox/techs@real-time.com/Windows/", "/dropbox"
 
   # Port forward WinRM / RDP
   # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395),
@@ -112,10 +125,11 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
   else
-    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
-    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/InstallNet4.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", privileged: false
+    config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1",privileged: false
+    config.vm.provision :shell, :path => "shell/InstallToolchain.ps1", privileged: false
   end
 
 $packageTestScript = <<SCRIPT
@@ -145,6 +159,6 @@ SCRIPT
   if Vagrant::VERSION < '1.8.0'
     config.vm.provision :shell, :inline => $packageTestScript
   else
-    config.vm.provision :shell, :inline => $packageTestScript, :powershell_elevated_interactive => true
+    config.vm.provision :shell, :inline => $packageTestScript,  privileged: false
   end
 end
