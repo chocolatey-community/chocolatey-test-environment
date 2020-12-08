@@ -31,7 +31,7 @@ You need a computer with:
 
 To get started, ensure you have the following installed:
  * Vagrant 1.8.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 1.8.x+. It appears you can go up to Vagrant 2.1.5, but may have some issues with 2.2.2 and Windows guests (newer versions may be fine).
- * Virtualbox 4.3.28+ - 5.2.20 (this flows in the selection of Vagrant - 5.2.22 seems to have some issues but newer versions may work fine)
+ * Virtualbox 4.3.28+ - 6.1.6 (this flows in the selection of Vagrant - 5.2.22 seems to have some issues but newer versions may work fine) 
  * vagrant sahara plugin (`vagrant plugin install sahara`)
 
 **NOTE:** If you decide to run with version 1.8.1 of Vagrant, you are going to need to set the `VAGRANT_SERVER_URL` environment variable as described in this [forum post](https://groups.google.com/forum/#!msg/vagrant-up/H8C68UTkosU/qz4YUmAgBAAJ), otherwise, you will get an HTTP 404 error when attempting to download the base vagrant box used here.
@@ -47,7 +47,7 @@ To get started, ensure you have the following installed:
  1. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
    * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
  1. Run `vagrant up` to prepare the machine for testing.
-   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
+   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __chocolatey/test-environment__ needs to be downloaded from the [Vagrant Cloud](https://app.vagrantup.com/chocolatey/boxes/test-environment).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
  1. Now the box is ready for you to start testing against.
  1. Run the following command: `vagrant sandbox on`.  This takes a snapshot of the VM using the [vagrant plugin](https://github.com/jedi4ever/sahara) that was installed earlier. This means that after testing packages, the VM can be returned to this known "good" state.
 

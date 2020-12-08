@@ -14,7 +14,7 @@ end
 Vagrant.configure("2") do |config|
   # This setting will download the atlas box at
   # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
-  config.vm.box = "ferventcoder/win2012r2-x64-nocm"
+  config.vm.box = "chocolatey/test-environment"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -111,11 +111,13 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
+    config.vm.provision :shell, :path => "shell/PostSetup.ps1"
   else
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/PostSetup.ps1", :powershell_elevated_interactive => true
   end
 
 $packageTestScript = <<SCRIPT
