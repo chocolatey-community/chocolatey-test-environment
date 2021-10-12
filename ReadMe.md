@@ -1,4 +1,4 @@
-# Chocolatey Testing Environment
+# ***Chocolatey Testing Environment***
 
 A testing environment setup similar to the [package-verifier](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) for testing packages. Over time this will add more Windows platforms for testing.
 
