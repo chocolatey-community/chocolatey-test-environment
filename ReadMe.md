@@ -1,10 +1,22 @@
 # Chocolatey Testing Environment
 
-A testing environment setup similar to the [package-verifier](https://github.com/chocolatey/package-verifier/wiki) for testing packages. Over time this will add more Windows platforms for testing.
+A testing environment setup similar to the [package-verifier](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) for testing packages. Over time this will add more Windows platforms for testing.
 
 When creating packages or testing other parts of Chocolatey, this environment provides a good base for an independent testing minus any dependencies you may already have installed. It also allows you to completely destroy an environment and then just tear it down without worry about messing up something on your own system.
 
 When creating packages, please review https://github.com/chocolatey/choco/wiki/CreatePackages
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Setup](#setup)
+- [Running Verification Manually](#running-verification-manually)
+  - [Preparing the Testing Environment](#preparing-the-testing-environment)
+  - [Testing a Package](#testing-a-package)
+  - [Make Changes and Retest](#make-changes-and-retest)
+  - [Tearing Down the Testing Environment](#tearing-down-the-testing-environment)
+- [Differences Between This and Package Verifier Service](#differences-between-this-and-package-verifier-service)
+- [Troubleshooting](#troubleshooting)
 
 ## Requirements
 
@@ -18,8 +30,11 @@ You need a computer with:
 ## Setup
 
 To get started, ensure you have the following installed:
+
  * Vagrant 2.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 2.1.x.
  * VirtualBox 5.2+
+ 
+**NOTE:** If you decide to run with version 1.8.1 of Vagrant, you are going to need to set the `VAGRANT_SERVER_URL` environment variable as described in this [forum post](https://groups.google.com/forum/#!msg/vagrant-up/H8C68UTkosU/qz4YUmAgBAAJ), otherwise, you will get an HTTP 404 error when attempting to download the base vagrant box used here.
 
 ## Running Verification Manually
 
@@ -32,7 +47,7 @@ To get started, ensure you have the following installed:
  1. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
    * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
  1. Run `vagrant up` to prepare the machine for testing.
-   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __ferventcoder/win2012r2-x64-nocm__ needs to be downloaded from the [Atlas website](https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
+   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __chocolatey/test-environment__ needs to be downloaded from the [Vagrant Cloud](https://app.vagrantup.com/chocolatey/boxes/test-environment).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
  1. Now the box is ready for you to start testing against.
  1. Run the following command: `vagrant snapshot save good`.  This takes a snapshot of the VM using the built-in snapshot functionality. This means that after testing packages, the VM can be returned to this known "good" state.
 
@@ -80,4 +95,12 @@ There are a couple of difference between the [verifier service]() and this envir
 
 ## Troubleshooting
 
-You get this error: "A Vagrant environment or target machine is required to run this command. Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+### Error: "A Vagrant environment or target machine is required to run this command."
+
+Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
+
+### Error: "WinRM: Warning: Authentication failure. Retrying..." and when the machine boots the C:\packages" folder is not present (and other configuration has not occurred).
+
+Edit Vagrantfile and find the `# Port forward WinRM / RDP` section. uncomment `#, host_ip: "127.0.0.1"` (remove the `#`). Run `vagrant up` again.
+
+  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true , host_ip: "127.0.0.1"

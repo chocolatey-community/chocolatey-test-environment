@@ -14,7 +14,7 @@ end
 Vagrant.configure("2") do |config|
   # This setting will download the atlas box at
   # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
-  config.vm.box = "ferventcoder/win2012r2-x64-nocm"
+  config.vm.box = "chocolatey/test-environment"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
@@ -50,7 +50,11 @@ Vagrant.configure("2") do |config|
     # The time in seconds to wait for the virtual machine to report an IP address
     v.ip_address_timeout = 130
     # Use differencing disk instead of cloning whole VHD
-    v.differencing_disk = true
+    if Vagrant::VERSION >= '2.1.2'
+      v.linked_clone = true
+    else
+      v.differencing_disk = true
+    end
     v.vm_integration_services = {
       guest_service_interface: true,
       heartbeat: true,
@@ -66,6 +70,7 @@ Vagrant.configure("2") do |config|
   # username/password for accessing the image
   config.winrm.username = "vagrant"
   config.winrm.password = "vagrant"
+  config.winrm.port = 55985
   # explicitly tell Vagrant the guest is Windows
   config.vm.guest = :windows
 
@@ -91,7 +96,7 @@ Vagrant.configure("2") do |config|
   # Port forward WinRM / RDP
   # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395),
   #  add host_ip: "127.0.0.1" for it to work
-  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 5985, host: 55985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
   config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true #, host_ip: "127.0.0.1"
   # Port forward SSH (ssh is forwarded by default in most versions of Vagrant,
   # but be sure). This is not necessary if you are not using SSH, but it doesn't
@@ -106,11 +111,13 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
+    config.vm.provision :shell, :path => "shell/PostSetup.ps1"
   else
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/PostSetup.ps1", :powershell_elevated_interactive => true
   end
 
 $packageTestScript = <<SCRIPT
