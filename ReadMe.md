@@ -80,7 +80,7 @@ For more information on vagrant commands, see the [Vagrant Docs](http://docs.vag
 
 ## Differences Between This and Package Verifier Service
 
-There are a couple of difference between the [verifier service]() and this environment.
+There are a couple of difference between the [verifier service](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) and this environment.
 
  * The verifier is run without the GUI - meaning it is run in a headless state. There is no box to interact with.
  * The verifier only runs against Windows 2012 R2 currently. This repo is adding more boxes as they become available.
