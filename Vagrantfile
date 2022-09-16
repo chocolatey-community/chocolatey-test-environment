@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
   # username/password for accessing the image
   config.winrm.username = "vagrant"
   config.winrm.password = "vagrant"
-  config.winrm.port = 55985
+  config.winrm.port = 45985
   # explicitly tell Vagrant the guest is Windows
   config.vm.guest = :windows
 
@@ -96,7 +96,7 @@ Vagrant.configure("2") do |config|
   # Port forward WinRM / RDP
   # Vagrant 1.9.3 - if you run into Errno::EADDRNOTAVAIL (https://github.com/mitchellh/vagrant/issues/8395),
   #  add host_ip: "127.0.0.1" for it to work
-  config.vm.network :forwarded_port, guest: 5985, host: 55985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
+  config.vm.network :forwarded_port, guest: 5985, host: 45985, id: "winrm", auto_correct: true #, host_ip: "127.0.0.1"
   config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true #, host_ip: "127.0.0.1"
   # Port forward SSH (ssh is forwarded by default in most versions of Vagrant,
   # but be sure). This is not necessary if you are not using SSH, but it doesn't
