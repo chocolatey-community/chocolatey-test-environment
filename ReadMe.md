@@ -45,9 +45,9 @@ To get started, ensure you have the following installed:
  1. Ensure setup above is good on your machine.
  1. Fork and Clone this repository
  1. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
-   * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
+     * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
  1. Run `vagrant up` to prepare the machine for testing.
-   * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __chocolatey/test-environment__ needs to be downloaded from the [Vagrant Cloud](https://app.vagrantup.com/chocolatey/boxes/test-environment).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
+     * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __chocolatey/test-environment__ needs to be downloaded from the [Vagrant Cloud](https://app.vagrantup.com/chocolatey/boxes/test-environment).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
  1. Now the box is ready for you to start testing against.
  1. Run the following command: `vagrant snapshot save good`.  This takes a snapshot of the VM using the built-in snapshot functionality. This means that after testing packages, the VM can be returned to this known "good" state.
 
@@ -83,10 +83,10 @@ When bringing up your testing environment Vagrant may report that the box being 
 To upgrade the vagrant box used by your testing environment:
 
  1. Download the new box with `vagrant box update`
-   * **Note** as with the initial setup, this is a large download so please be patient
+     * **Note** as with the initial setup, this is a large download so please be patient
  1. Delete the exiting testing environment with `vagrant box destroy`
  1. Restore the `Vagrantfile` back to it's default, i.e. there should not be any uncommented lines from testing packages
-   * **Note** you may wish to take this opportunity to fetch the latest changes from this repository
+     * **Note** you may wish to take this opportunity to fetch the latest changes from this repository
  1. Run `vagrant up` to prepare the testing environment with the new box
  1. Snapshot the updated testing environment with `vagrant snapshot save good`
 
