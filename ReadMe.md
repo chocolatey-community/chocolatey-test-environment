@@ -84,7 +84,7 @@ To upgrade the vagrant box used by your testing environment:
 
  1. Download the new box with `vagrant box update`
      * **Note** as with the initial setup, this is a large download so please be patient
- 1. Delete the exiting testing environment with `vagrant box destroy`
+ 1. Delete the existing testing environment with `vagrant destroy`
  1. Restore the `Vagrantfile` back to it's default, i.e. there should not be any uncommented lines from testing packages
      * **Note** you may wish to take this opportunity to fetch the latest changes from this repository
  1. Run `vagrant up` to prepare the testing environment with the new box
