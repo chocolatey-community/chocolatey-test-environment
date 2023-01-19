@@ -33,7 +33,7 @@ To get started, ensure you have the following installed:
 
  * Vagrant 2.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 2.1.x.
  * VirtualBox 5.2+
- 
+
 **NOTE:** If you decide to run with version 1.8.1 of Vagrant, you are going to need to set the `VAGRANT_SERVER_URL` environment variable as described in this [forum post](https://groups.google.com/forum/#!msg/vagrant-up/H8C68UTkosU/qz4YUmAgBAAJ), otherwise, you will get an HTTP 404 error when attempting to download the base vagrant box used here.
 
 ## Running Verification Manually
@@ -75,6 +75,28 @@ When you are ready to reset to the state just before installing:
 
 * stop the box with `vagrant suspend`, `vagrant halt`
 * delete the box with `vagrant destroy`
+
+### Upgrading the Testing Environment
+
+When bringing up your testing environment Vagrant may report that the box being used is out of date. You can also manually check to see if a newer box is available using the `vagrant box outdated` command.
+
+To upgrade the vagrant box used by your testing environment:
+
+ 1. Download the new box with `vagrant box update`
+   * **Note** as with the initial setup, this is a large download so please be patient
+ 1. Delete the exiting testing environment with `vagrant box destroy`
+ 1. Restore the `Vagrantfile` back to it's default, i.e. there should not be any uncommented lines from testing packages
+   * **Note** you may wish to take this opportunity to fetch the latest changes from this repository
+ 1. Run `vagrant up` to prepare the testing environment with the new box
+ 1. Snapshot the updated testing environment with `vagrant snapshot save good`
+
+### Using a Specific Vagrant Box Version
+
+If you don't want to use the latest available Vagrant box, you can select a specific box version or otherwise constrain the valid versions used in your testing environment. To do so, edit the `Vagrantfile` and uncomment the `config.vm.box_version` line.
+
+By default this will set the desired box version to "2.0.0" which is the last Windows Server 2012 R2 version available.
+
+You can adjust this setting to meet your needs, for more information on the options available see the documentation on [Version Constraints](https://developer.hashicorp.com/vagrant/docs/boxes/versioning#version-constraints).
 
 For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html)
 

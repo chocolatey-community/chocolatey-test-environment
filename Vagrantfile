@@ -12,9 +12,13 @@ end
 
 # http://docs.vagrantup.com/v2/vagrantfile/machine_settings.html
 Vagrant.configure("2") do |config|
-  # This setting will download the atlas box at
-  # https://atlas.hashicorp.com/ferventcoder/boxes/win2012r2-x64-nocm
+  # This setting will download the Vagrant Cloud box at
+  # https://app.vagrantup.com/chocolatey/boxes/test-environment
   config.vm.box = "chocolatey/test-environment"
+
+  # Uncomment the following line to restrict the version of the box to use,
+  # otherwise the latest version available will be used.
+  # config.vm.box_version = "2.0.0"
 
   # http://docs.vagrantup.com/v2/providers/configuration.html
   # http://docs.vagrantup.com/v2/virtualbox/configuration.html
