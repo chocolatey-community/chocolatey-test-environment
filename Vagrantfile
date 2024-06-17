@@ -75,6 +75,11 @@ Vagrant.configure("2") do |config|
   config.winrm.username = "vagrant"
   config.winrm.password = "vagrant"
   config.winrm.port = 55985
+  # a long boot timeout is needed for slow host systems
+  config.vm.boot_timeout = 1800
+  # to avoid WinRM errors in the middle of booting, we ensure that (max_tries * retry_delay) > boot_timeout:
+  config.winrm.max_tries = 900
+  config.winrm.retry_delay = 2
   # explicitly tell Vagrant the guest is Windows
   config.vm.guest = :windows
 
