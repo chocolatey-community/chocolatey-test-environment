@@ -49,10 +49,11 @@ Vagrant.configure("2") do |config|
   config.vm.provider :hyperv do |v, override|
     # 4GB RAM
     v.memory = 4096
+    v.maxmemory = nil
     # 2 CPUs
     v.cpus = 2
     # The time in seconds to wait for the virtual machine to report an IP address
-    v.ip_address_timeout = 130
+    v.ip_address_timeout = 240
     # Use differencing disk instead of cloning whole VHD
     if Vagrant::VERSION >= '2.1.2'
       v.linked_clone = true
