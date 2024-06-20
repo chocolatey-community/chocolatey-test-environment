@@ -15,6 +15,9 @@ When creating packages, please review https://github.com/chocolatey/choco/wiki/C
   - [Testing a Package](#testing-a-package)
   - [Make Changes and Retest](#make-changes-and-retest)
   - [Tearing Down the Testing Environment](#tearing-down-the-testing-environment)
+  - [Upgrading the Testing Environment](#upgrading-the-testing-environment)
+  - [Using a Specific Vagrant Box Version](#using-a-specific-vagrant-box-version)
+  - [Using Hyper-V instead of VirtualBox](#using-hyper-v-instead-of-virtualbox)
 - [Differences Between This and Package Verifier Service](#differences-between-this-and-package-verifier-service)
 - [Troubleshooting](#troubleshooting)
 
@@ -100,14 +103,40 @@ You can adjust this setting to meet your needs, for more information on the opti
 
 For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html)
 
+## Using Hyper-V instead of VirtualBox
+
+> [!CAUTION]
+> It is recommended to favor running the Chocolatey Test Environment under VirtualBox.
+
+> Hyper-V support is intended to lower the barrier to entry for those using Windows features which force the usage of Hyper-V,
+> such as the Windows Subsystem for Linux (WSL 2), Windows Sandbox, Device Guard, and Credential Guard.
+>
+> Please be sure that you're aware of the [limitations](https://developer.hashicorp.com/vagrant/docs/providers/hyperv/limitations) of using the Vagrant Hyper-V provider.
+
+> [!NOTE]
+> The Hyper-V role requires Windows 10 or 11 Enterprise, Pro, or Education.
+> It **cannot** be installed on Home editions of Windows.
+
+ 1. Ensure setup above is complete, ignoring the need for VirtualBox.
+ 1. Enable the Hyper-V feature:
+     * Open a PowerShell console as Administrator.
+     * Run `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All`.
+     * Restart Windows.
+ 1. Follow the general instructions to [prepare the testing environment](#preparing-the-testing-environment), swapping the default `vagrant up` command with `vagrant up --provider=hyperv`.
+     * The Hyper-V image, downloaded the first time you run command is very large (> 5GB) and specific to Hyper-V.
+
 ## Differences Between This and Package Verifier Service
 
-There are a couple of difference between the [verifier service](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) and this environment.
+There are a couple of difference between the [Package Verifier service](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) and this environment.
+
 
  * The verifier is run without the GUI - meaning it is run in a headless state. There is no box to interact with.
- * The verifier only runs against Windows 2012 R2 currently. This repo is adding more boxes as they become available.
- * The verifier times out on waiting for a command after 12 minutes.
- * Synced folders are different - the verifier syncs the .chocolatey folder to gather the package information files.
+ * Package Verifier only runs against Windows Server 2019, currently.
+
+ * Package Verifier times out on waiting for a command after 12 minutes.
+
+ * Synced folders are different - Package Verifier syncs the `.chocolatey` folder to gather the package information files.
+
  * Specific VM settings are different (for performance):
     * No GUI (as previously mentioned) - `v.gui = false`
     * 6GB RAM - `v.customize ["modifyvm", :id, "--memory", "6144"]`
