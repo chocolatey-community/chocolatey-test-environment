@@ -70,6 +70,15 @@ Vagrant.configure("2") do |config|
   }
   end
 
+  config.vm.provider :libvirt do |v|
+    # 4GB RAM
+    v.memory = 4096
+    # 2 CPUs
+    v.cpus = 2
+    v.nic_model_type = "e1000"
+    v.input :type => "tablet", :bus => "usb"
+  end
+
   # timeout of waiting for image to stop running - may be a deprecated setting
   config.windows.halt_timeout = 20
   # username/password for accessing the image
@@ -92,13 +101,21 @@ Vagrant.configure("2") do |config|
     config.vm.communicator = "winrm"
   end
 
+  config.ssh.extra_args = ["-o", "HostKeyAlgorithms=ssh-dss", "-o", "PubkeyAcceptedKeyTypes=+ssh-rsa"]
+
   # Synced folders - http://docs.vagrantup.com/v2/synced-folders/
   # A synced folder is a fancy term for shared folders - it takes a folder on
   # the host and shares it with the guest (vagrant) image. The entire folder
   # where the Vagrantfile is located is always shared as `c:\vagrant` (the
   # naming of this directory being `vagrant` is just a coincedence).
   # Share `packages` directory as `C:\packages`
-  config.vm.synced_folder "packages", "/packages"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  unless ENV.has_key?('PRE_PROVISION')
+    config.vm.synced_folder "packages", "/packages",
+      rsync__args: ["--verbose", "--archive", "--delete", "-z", "--copy-links", "--protocol=29"]
+    config.vm.synced_folder ".", "/vagrant",
+      rsync__args: ["--verbose", "--archive", "--delete", "-z", "--copy-links", "--protocol=29"]
+  end
   #config.vm.synced_folder "temp", "/Users/vagrant/AppData/Local/Temp/chocolatey"
   # not recommended for sharing, it may have issues with `vagrant sandbox rollback`
   #config.vm.synced_folder "chocolatey", "/ProgramData/chocolatey"
@@ -120,12 +137,14 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1"
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1"
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1"
+    config.vm.provision :shell, :path => "shell/installRsync.ps1"
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1"
     config.vm.provision :shell, :path => "shell/PostSetup.ps1"
   else
     config.vm.provision :shell, :path => "shell/PrepareWindows.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallNet4.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/InstallChocolatey.ps1", :powershell_elevated_interactive => true
+    config.vm.provision :shell, :path => "shell/installRsync.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/NotifyGuiAppsOfEnvironmentChanges.ps1", :powershell_elevated_interactive => true
     config.vm.provision :shell, :path => "shell/PostSetup.ps1", :powershell_elevated_interactive => true
   end
