@@ -1,5 +1,12 @@
 # Chocolatey Testing Environment
 
+> [!IMPORTANT]
+> **The `chocolatey/test-environment` Vagrant box is moving.** HashiCorp is shutting down the [HCP Vagrant Registry](https://developer.hashicorp.com/hcp/docs/vagrant/hcp-vagrant-eol), which is where this environment downloads the box from. The existing box can still be downloaded until December 31, 2026, but no new versions will be published there.
+>
+> The Packer build for the box is now public in [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box), so you can build the box yourself. Its README explains how to [use the box you build with this environment](https://github.com/chocolatey-community/chocolatey-test-environment-box#using-the-box-with-the-chocolatey-testing-environment).
+>
+> For quick package testing that doesn't need the full testing environment, we'll also be adding instructions for using Windows Sandbox.
+
 A testing environment setup similar to the [package-verifier](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) for testing packages. Over time this will add more Windows platforms for testing.
 
 When creating packages or testing other parts of Chocolatey, this environment provides a good base for an independent testing minus any dependencies you may already have installed. It also allows you to completely destroy an environment and then just tear it down without worry about messing up something on your own system.
