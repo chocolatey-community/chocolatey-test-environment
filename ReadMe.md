@@ -1,11 +1,11 @@
 # Chocolatey Testing Environment
 
 > [!IMPORTANT]
-> **The `chocolatey/test-environment` Vagrant box is moving.** HashiCorp is shutting down the [HCP Vagrant Registry](https://developer.hashicorp.com/hcp/docs/vagrant/hcp-vagrant-eol), which is where this environment downloads the box from. The existing box can still be downloaded until December 31, 2026, but no new versions will be published there.
+> **The `chocolatey/test-environment` Vagrant box is moving.** HashiCorp is shutting down the [HCP Vagrant Registry](https://developer.hashicorp.com/hcp/docs/vagrant/hcp-vagrant-eol), which is where this environment used to download the box from. The existing box can still be downloaded until December 31, 2026, but no new versions will be published there.
 >
-> The Packer build for the box is now public in [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box), so you can build the box yourself. Its README explains how to [use the box you build with this environment](https://github.com/chocolatey-community/chocolatey-test-environment-box#using-the-box-with-the-chocolatey-testing-environment).
+> The Packer build for the box is now public in [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box), so you can build the box yourself. See [Building the Box](#building-the-box).
 >
-> For quick package testing that doesn't need the full testing environment, we'll also be adding instructions for using Windows Sandbox.
+> For quick package testing that doesn't need the full testing environment, see [Quick Testing With Windows Sandbox](#quick-testing-with-windows-sandbox).
 
 A testing environment setup similar to the [package-verifier](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) for testing packages. Over time this will add more Windows platforms for testing.
 
@@ -17,6 +17,7 @@ When creating packages, please review https://github.com/chocolatey/choco/wiki/C
 
 - [Requirements](#requirements)
 - [Setup](#setup)
+  - [Building the Box](#building-the-box)
 - [Running Verification Manually](#running-verification-manually)
   - [Preparing the Testing Environment](#preparing-the-testing-environment)
   - [Testing a Package](#testing-a-package)
@@ -25,6 +26,7 @@ When creating packages, please review https://github.com/chocolatey/choco/wiki/C
   - [Upgrading the Testing Environment](#upgrading-the-testing-environment)
   - [Using a Specific Vagrant Box Version](#using-a-specific-vagrant-box-version)
   - [Using Hyper-V instead of VirtualBox](#using-hyper-v-instead-of-virtualbox)
+- [Quick Testing With Windows Sandbox](#quick-testing-with-windows-sandbox)
 - [Differences Between This and Package Verifier Service](#differences-between-this-and-package-verifier-service)
 - [Troubleshooting](#troubleshooting)
 
@@ -35,16 +37,30 @@ You need a computer with:
 * a 64-bit processor and OS
 * Intel VT-x [enabled](http://www.howtogeek.com/213795/how-to-enable-intel-vt-x-in-your-computers-bios-or-uefi-firmware/) (usually not an issue if your computer is newer than 2011). This is necessary because we are using 64bit VMs.
 * Hyper-V may need to be disabled for Virtualbox to work properly if your computer is a Windows box. **NOTE:** This may actually not be required.
-* At least 50GB of free space.
+* At least 50GB of free space, plus about 60GB more while you [build the box](#building-the-box).
 
 ## Setup
 
 To get started, ensure you have the following installed:
 
- * Vagrant 2.1+ - linked clones is the huge reason here. You can technically use any version of Vagrant 1.3.5+. But you will get the best performance with 2.1.x.
- * VirtualBox 5.2+
+ * Vagrant 2.4.9+ - the first version that supports VirtualBox 7.2.
+ * VirtualBox 7.2 - the version the box is built and tested with.
 
-**NOTE:** If you decide to run with version 1.8.1 of Vagrant, you are going to need to set the `VAGRANT_SERVER_URL` environment variable as described in this [forum post](https://groups.google.com/forum/#!msg/vagrant-up/H8C68UTkosU/qz4YUmAgBAAJ), otherwise, you will get an HTTP 404 error when attempting to download the base vagrant box used here.
+### Building the Box
+
+This environment uses a Vagrant box named `chocolatey/test-environment`. Microsoft's license terms for the Windows Server evaluation don't allow the box to be redistributed, so instead of downloading it, you build it yourself from [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box). It's the same build the Package Verifier uses. You only need to do this once for each version of the box.
+
+ 1. Build the box by following the [Building](https://github.com/chocolatey-community/chocolatey-test-environment-box#building) instructions in chocolatey-test-environment-box. Build it for VirtualBox, or for Hyper-V if you're [using Hyper-V](#using-hyper-v-instead-of-virtualbox). A build takes 1.5–3 hours, and is tested on Windows hosts.
+ 1. If you previously downloaded the box from the HCP Vagrant Registry, remove it so that Vagrant doesn't keep using it:
+    ```powershell
+    vagrant box remove chocolatey/test-environment --all --provider virtualbox
+    ```
+ 1. Add the box you built under the name this environment's `Vagrantfile` expects:
+    ```powershell
+    vagrant box add --name chocolatey/test-environment <path to chocolatey-test-environment-box>\output\chocolatey-test-environment_3.4.0_virtualbox.box --provider virtualbox
+    ```
+
+For Hyper-V, use `--provider hyperv` and the `_hyperv.box` file instead.
 
 ## Running Verification Manually
 
@@ -57,7 +73,7 @@ To get started, ensure you have the following installed:
  1. Open a command line (`PowerShell.exe`/`cmd.exe` on Windows, `bash` everywhere else) and navigate to the root folder of the repository.  You know you are in the right place when you do a `dir` or `ls` and `Vagrantfile` is in your path.
      * No idea if bash on Windows (through Git/CygWin) is supported. If you run into issues, it is better to just use `PowerShell.exe` or `cmd.exe`. Please do not file issues stating it doesn't work.
  1. Run `vagrant up` to prepare the machine for testing.
-     * **Note** due to the way that vagrant works, the first time that you run this command, the vagrant box named __chocolatey/test-environment__ needs to be downloaded from the [HCP Vagrant Registry](https://portal.cloud.hashicorp.com/vagrant/discover/chocolatey/test-environment).  This will take quite a while, and should only be attempted on a reasonably fast connection, that doesn't have any download limit restrictions. Once it has downloaded it will import the box and apply the scripts and configurations to the box as listed inside the `Vagrantfile`.  You can find the downloaded box in the `~/.vagrant.d` or `c:\users\username\.vagrant.d` folder.
+     * **Note** you need to have [built and added the box](#building-the-box) first. The first time that you run this command, Vagrant imports the box and applies the scripts and configurations listed inside the `Vagrantfile`, which will take quite a while.
  1. Now the box is ready for you to start testing against.
  1. Run the following command: `vagrant snapshot save good`.  This takes a snapshot of the VM using the built-in snapshot functionality. This means that after testing packages, the VM can be returned to this known "good" state.
 
@@ -88,13 +104,13 @@ When you are ready to reset to the state just before installing:
 
 ### Upgrading the Testing Environment
 
-When bringing up your testing environment Vagrant may report that the box being used is out of date. You can also manually check to see if a newer box is available using the `vagrant box outdated` command.
+Boxes you add from a file don't have a version, so Vagrant can't tell you when a newer one is available, and `vagrant box outdated` and `vagrant box update` don't work for them. Watch [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box) on GitHub for new versions.
 
 To upgrade the vagrant box used by your testing environment:
 
- 1. Download the new box with `vagrant box update`
-     * **Note** as with the initial setup, this is a large download so please be patient
+ 1. Build the new version of the box (see [Building the Box](#building-the-box)).
  1. Delete the existing testing environment with `vagrant destroy`
+ 1. Remove the old box with `vagrant box remove chocolatey/test-environment --provider virtualbox`, then add the new one as described in [Building the Box](#building-the-box).
  1. Restore the `Vagrantfile` back to it's default, i.e. there should not be any uncommented lines from testing packages
      * **Note** you may wish to take this opportunity to fetch the latest changes from this repository
  1. Run `vagrant up` to prepare the testing environment with the new box
@@ -102,11 +118,7 @@ To upgrade the vagrant box used by your testing environment:
 
 ### Using a Specific Vagrant Box Version
 
-If you don't want to use the latest available Vagrant box, you can select a specific box version or otherwise constrain the valid versions used in your testing environment. To do so, edit the `Vagrantfile` and uncomment the `config.vm.box_version` line.
-
-By default this will set the desired box version to "2.0.0" which is the last Windows Server 2012 R2 version available.
-
-You can adjust this setting to meet your needs, for more information on the options available see the documentation on [Version Constraints](https://developer.hashicorp.com/vagrant/docs/boxes/versioning#version-constraints).
+Boxes you build and add yourself don't have a version, so `config.vm.box_version` doesn't apply to them. To test against a specific version of the box, check out that version's tag in chocolatey-test-environment-box (for example, `git checkout 3.4.0`) and build the box from it. Version 3.4.0 is the first that can be built from that repository.
 
 For more information on vagrant commands, see the [Vagrant Docs](http://docs.vagrantup.com/v2/cli/index.html)
 
@@ -130,7 +142,38 @@ For more information on vagrant commands, see the [Vagrant Docs](http://docs.vag
      * Run `Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All`.
      * Restart Windows.
  1. Follow the general instructions to [prepare the testing environment](#preparing-the-testing-environment), swapping the default `vagrant up` command with `vagrant up --provider=hyperv`.
-     * The Hyper-V image, downloaded the first time you run command is very large (> 5GB) and specific to Hyper-V.
+     * You need a box built for Hyper-V. Build it with `-Provider hyperv`, and add it with `--provider hyperv` (see [Building the Box](#building-the-box)).
+
+## Quick Testing With Windows Sandbox
+
+For a quick check that a package installs and uninstalls, you don't need the full testing environment. [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/) starts a clean, disposable copy of Windows in a few seconds, and everything in it is discarded when you close it.
+
+It doesn't replace the full testing environment. The sandbox runs Windows 10 or 11, based on your computer's own copy of Windows, rather than Windows Server 2019 like the Package Verifier. It also doesn't have the box's preinstalled software or settings. Test in the full environment before you submit a package.
+
+> [!NOTE]
+> Windows Sandbox requires Windows 10 or 11 Pro, Enterprise, or Education, with virtualization enabled in the BIOS.
+> It isn't available on Home editions of Windows.
+
+ 1. Enable Windows Sandbox (you only need to do this once):
+     * Open a PowerShell console as Administrator.
+     * Run `Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All`.
+     * Restart Windows.
+ 1. To test a package you've built, copy its `.nupkg` file into the `packages` folder in the root of this repository.
+ 1. Open `sandbox\chocolatey-test-environment.wsb`, either by double-clicking it or by running this from the root of this repository:
+    ```powershell
+    .\sandbox\chocolatey-test-environment.wsb
+    ```
+    Windows Sandbox opens, and a PowerShell window in it installs Chocolatey CLI. The `packages` folder is available in the sandbox as `C:\packages`, read-only.
+ 1. In that PowerShell window, install the package:
+    ```powershell
+    choco install <package-id> --source="'C:\packages;https://community.chocolatey.org/api/v2/'" --verbose --debug
+    ```
+    To test a version that's already on the Chocolatey Community Repository instead, use `--version <version>` in place of the `--source` option.
+ 1. Check that the software works, then uninstall the package:
+    ```powershell
+    choco uninstall <package-id> --verbose --debug
+    ```
+ 1. Close Windows Sandbox. Only one sandbox can run at a time, so to test again, close it and open `chocolatey-test-environment.wsb` again for a fresh one.
 
 ## Differences Between This and Package Verifier Service
 
@@ -142,13 +185,15 @@ There are a couple of difference between the [Package Verifier service](https://
 
  * Package Verifier times out on waiting for a command after 12 minutes.
 
- * Synced folders are different - Package Verifier syncs the `.chocolatey` folder to gather the package information files.
+ * Synced folders are different - Package Verifier syncs the `.chocolatey` and `logs` folders to gather the package information files and Chocolatey CLI logs.
+
+ * Package Verifier connects to the VM over SSH rather than WinRM.
 
  * Specific VM settings are different (for performance):
     * No GUI (as previously mentioned) - `v.gui = false`
-    * 6GB RAM - `v.customize ["modifyvm", :id, "--memory", "6144"]`
-    * 4 CPUs - `v.customize ["modifyvm", :id, "--cpus", "4"]`
-    * Clipboard disabled - `v.customize ["modifyvm", :id, "--clipboard", "disabled"]`
+    * 8GB RAM - `v.customize ["modifyvm", :id, "--memory", "8192"]`
+    * 6 CPUs - `v.customize ["modifyvm", :id, "--cpus", "6"]`
+    * Clipboard disabled - `v.customize ["modifyvm", :id, "--clipboard-mode", "disabled"]`
     * Drag and Drop disabled - `v.customize ["modifyvm", :id, "--draganddrop", "disabled"]`
 
 ## Troubleshooting
@@ -156,9 +201,3 @@ There are a couple of difference between the [Package Verifier service](https://
 ### Error: "A Vagrant environment or target machine is required to run this command."
 
 Run `vagrant init` to create a new Vagrant environment. Or, get an ID of a target machine from `vagrant global-status` to run this command on. A final option is to change to a directory with a Vagrantfile and to try again." - please ensure you are on the correct working directory (where this ReadMe and `Vagrantfile` is) of this repo and try again.
-
-### Error: "WinRM: Warning: Authentication failure. Retrying..." and when the machine boots the C:\packages" folder is not present (and other configuration has not occurred).
-
-Edit Vagrantfile and find the `# Port forward WinRM / RDP` section. uncomment `#, host_ip: "127.0.0.1"` (remove the `#`). Run `vagrant up` again.
-
-  config.vm.network :forwarded_port, guest: 5985, host: 5985, id: "winrm", auto_correct: true , host_ip: "127.0.0.1"
