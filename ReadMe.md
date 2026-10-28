@@ -5,7 +5,7 @@
 >
 > The Packer build for the box is now public in [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box), so you can build the box yourself. See [Building the Box](#building-the-box).
 >
-> For quick package testing that doesn't need the full testing environment, we'll also be adding instructions for using Windows Sandbox.
+> For quick package testing that doesn't need the full testing environment, see [Quick Testing With Windows Sandbox](#quick-testing-with-windows-sandbox).
 
 A testing environment setup similar to the [package-verifier](https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier) for testing packages. Over time this will add more Windows platforms for testing.
 
@@ -26,6 +26,7 @@ When creating packages, please review https://github.com/chocolatey/choco/wiki/C
   - [Upgrading the Testing Environment](#upgrading-the-testing-environment)
   - [Using a Specific Vagrant Box Version](#using-a-specific-vagrant-box-version)
   - [Using Hyper-V instead of VirtualBox](#using-hyper-v-instead-of-virtualbox)
+- [Quick Testing With Windows Sandbox](#quick-testing-with-windows-sandbox)
 - [Differences Between This and Package Verifier Service](#differences-between-this-and-package-verifier-service)
 - [Troubleshooting](#troubleshooting)
 
@@ -142,6 +143,37 @@ For more information on vagrant commands, see the [Vagrant Docs](http://docs.vag
      * Restart Windows.
  1. Follow the general instructions to [prepare the testing environment](#preparing-the-testing-environment), swapping the default `vagrant up` command with `vagrant up --provider=hyperv`.
      * You need a box built for Hyper-V. Build it with `-Provider hyperv`, and add it with `--provider hyperv` (see [Building the Box](#building-the-box)).
+
+## Quick Testing With Windows Sandbox
+
+For a quick check that a package installs and uninstalls, you don't need the full testing environment. [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/) starts a clean, disposable copy of Windows in a few seconds, and everything in it is discarded when you close it.
+
+It doesn't replace the full testing environment. The sandbox runs Windows 10 or 11, based on your computer's own copy of Windows, rather than Windows Server 2019 like the Package Verifier. It also doesn't have the box's preinstalled software or settings. Test in the full environment before you submit a package.
+
+> [!NOTE]
+> Windows Sandbox requires Windows 10 or 11 Pro, Enterprise, or Education, with virtualization enabled in the BIOS.
+> It isn't available on Home editions of Windows.
+
+ 1. Enable Windows Sandbox (you only need to do this once):
+     * Open a PowerShell console as Administrator.
+     * Run `Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -All`.
+     * Restart Windows.
+ 1. To test a package you've built, copy its `.nupkg` file into the `packages` folder in the root of this repository.
+ 1. Open `sandbox\chocolatey-test-environment.wsb`, either by double-clicking it or by running this from the root of this repository:
+    ```powershell
+    .\sandbox\chocolatey-test-environment.wsb
+    ```
+    Windows Sandbox opens, and a PowerShell window in it installs Chocolatey CLI. The `packages` folder is available in the sandbox as `C:\packages`, read-only.
+ 1. In that PowerShell window, install the package:
+    ```powershell
+    choco install <package-id> --source="'C:\packages;https://community.chocolatey.org/api/v2/'" --verbose --debug
+    ```
+    To test a version that's already on the Chocolatey Community Repository instead, use `--version <version>` in place of the `--source` option.
+ 1. Check that the software works, then uninstall the package:
+    ```powershell
+    choco uninstall <package-id> --verbose --debug
+    ```
+ 1. Close Windows Sandbox. Only one sandbox can run at a time, so to test again, close it and open `chocolatey-test-environment.wsb` again for a fresh one.
 
 ## Differences Between This and Package Verifier Service
 
