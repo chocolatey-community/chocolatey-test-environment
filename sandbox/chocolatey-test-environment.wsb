@@ -1,0 +1,21 @@
+<!--
+  Opens Windows Sandbox for quick package testing. See "Quick Testing With
+  Windows Sandbox" in ReadMe.md. Host folders are relative to this file.
+-->
+<Configuration>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>..</HostFolder>
+      <SandboxFolder>C:\chocolatey-test-environment</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>..\packages</HostFolder>
+      <SandboxFolder>C:\packages</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell.exe -ExecutionPolicy Bypass -Command "Start-Process powershell.exe -ArgumentList '-NoExit -ExecutionPolicy Bypass -File C:\chocolatey-test-environment\sandbox\Initialize-Sandbox.ps1'"</Command>
+  </LogonCommand>
+</Configuration>
