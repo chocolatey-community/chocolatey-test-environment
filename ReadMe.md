@@ -3,6 +3,8 @@
 > [!IMPORTANT]
 > **The `chocolatey/test-environment` Vagrant box is moving.** HashiCorp is shutting down the [HCP Vagrant Registry](https://developer.hashicorp.com/hcp/docs/vagrant/hcp-vagrant-eol), which is where this environment used to download the box from. The existing box can still be downloaded until December 31, 2026, but no new versions will be published there.
 >
+> If you already have the box, it keeps working: Vagrant keeps a local copy, and only warns that it can't check for updates. You only need to build the box for a new computer or a newer box version.
+>
 > The Packer build for the box is now public in [chocolatey-test-environment-box](https://github.com/chocolatey-community/chocolatey-test-environment-box), so you can build the box yourself. See [Building the Box](#building-the-box).
 >
 > For quick package testing that doesn't need the full testing environment, see [Quick Testing With Windows Sandbox](#quick-testing-with-windows-sandbox).
